@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>タイプ再判定ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=BIZ+UDPGothic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* レトロRPGのメニュー画面。暗い地に白枠のウィンドウを縦に積む */
+  --bg:#14152a; --bg2:#1c1e38; --win:#252a4a; --win2:#1b1f3a;
+  --frame:#eef0ff; --ink:#eef0ff; --sub:#9ca3cf; --dark:#07080f;
+  --gold:#eef0ff; --cyan:#eef0ff; /* 飾りは白黒に。色はタイプの8文字だけに使う */ --neutral:#94b0c2;
+  --font:"DotGothic16","BIZ UDPGothic",monospace;
+  color-scheme:dark;
+  --frame-red:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%228%22%20height%3D%228%22%20shape-rendering%3D%22crispEdges%22%3E%3Crect%20x%3D%222%22%20y%3D%220%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%223%22%20y%3D%220%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%224%22%20y%3D%220%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%225%22%20y%3D%220%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%221%22%20y%3D%221%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%222%22%20y%3D%221%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23d8323c%22/%3E%3Crect%20x%3D%223%22%20y%3D%221%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23d8323c%22/%3E%3Crect%20x%3D%224%22%20y%3D%221%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23d8323c%22/%3E%3Crect%20x%3D%225%22%20y%3D%221%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23d8323c%22/%3E%3Crect%20x%3D%226%22%20y%3D%221%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%220%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%221%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23d8323c%22/%3E%3Crect%20x%3D%222%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%233a1622%22/%3E%3Crect%20x%3D%223%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%233a1622%22/%3E%3Crect%20x%3D%224%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%233a1622%22/%3E%3Crect%20x%3D%225%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%233a1622%22/%3E%3Crect%20x%3D%226%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23d8323c%22/%3E%3Crect%20x%3D%227%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%220%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%221%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23d8323c%22/%3E%3Crect%20x%3D%222%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%233a1622%22/%3E%3Crect%20x%3D%223%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%233a1622%22/%3E%3Crect%20x%3D%224%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%233a1622%22/%3E%3Crect%20x%3D%225%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%233a1622%22/%3E%3Crect%20x%3D%226%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23d8323c%22/%3E%3Crect%20x%3D%227%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%220%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%221%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23d8323c%22/%3E%3Crect%20x%3D%222%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%233a1622%22/%3E%3Crect%20x%3D%223%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%233a1622%22/%3E%3Crect%20x%3D%224%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%233a1622%22/%3E%3Crect%20x%3D%225%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%233a1622%22/%3E%3Crect%20x%3D%226%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23d8323c%22/%3E%3Crect%20x%3D%227%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%220%22%20y%3D%225%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%221%22%20y%3D%225%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23d8323c%22/%3E%3Crect%20x%3D%222%22%20y%3D%225%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%233a1622%22/%3E%3Crect%20x%3D%223%22%20y%3D%225%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%233a1622%22/%3E%3Crect%20x%3D%224%22%20y%3D%225%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%233a1622%22/%3E%3Crect%20x%3D%225%22%20y%3D%225%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%233a1622%22/%3E%3Crect%20x%3D%226%22%20y%3D%225%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23d8323c%22/%3E%3Crect%20x%3D%227%22%20y%3D%225%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%221%22%20y%3D%226%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%222%22%20y%3D%226%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23d8323c%22/%3E%3Crect%20x%3D%223%22%20y%3D%226%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23d8323c%22/%3E%3Crect%20x%3D%224%22%20y%3D%226%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23d8323c%22/%3E%3Crect%20x%3D%225%22%20y%3D%226%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23d8323c%22/%3E%3Crect%20x%3D%226%22%20y%3D%226%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%222%22%20y%3D%227%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%223%22%20y%3D%227%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%224%22%20y%3D%227%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%225%22%20y%3D%227%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3C/svg%3E");
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+html{background:var(--bg)}
+#sky{position:fixed;inset:0;width:100%;height:100%;z-index:-1;image-rendering:pixelated;pointer-events:none}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,.07) 0 1px,transparent 1px 3px)}
+body{
+  background-color:transparent;
+  /* 2px市松のディザ */
+  color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.75;
+  -webkit-font-smoothing:none;font-smooth:never;
+}
+b{font-weight:400;color:var(--gold)}
+.wrap{max-width:640px;margin:0 auto;padding:32px 12px 80px;display:flex;flex-direction:column;align-items:center;gap:60px}
+/* 枠の横幅は全体の88% */
+.wrap > *{width:88%}
+/* セクションの区切り：ドットの線 */
+/* 各セクションは星が透けない暗い板の上に置く（文字を読みやすく） */
+section.sec{position:relative;background:rgba(12,13,32,.94);padding:22px 14px 24px;
+  box-shadow:0 0 0 2px #2a2f58}
+
+/* ウィンドウ共通：白い太枠＋黒の外線＋内側の影 */
+/* ウィンドウ：角が段々になったドット枠（9スライス） */
+.round,.qcard,.result,header,.picker,.more{
+  border:9px solid transparent;border-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%228%22%20height%3D%228%22%20shape-rendering%3D%22crispEdges%22%3E%3Crect%20x%3D%222%22%20y%3D%220%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%223%22%20y%3D%220%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%224%22%20y%3D%220%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%225%22%20y%3D%220%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%221%22%20y%3D%221%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%222%22%20y%3D%221%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%223%22%20y%3D%221%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%224%22%20y%3D%221%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%225%22%20y%3D%221%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%226%22%20y%3D%221%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%220%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%221%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%222%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23252a4a%22/%3E%3Crect%20x%3D%223%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23252a4a%22/%3E%3Crect%20x%3D%224%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23252a4a%22/%3E%3Crect%20x%3D%225%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23252a4a%22/%3E%3Crect%20x%3D%226%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%227%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%220%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%221%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%222%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23252a4a%22/%3E%3Crect%20x%3D%223%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23252a4a%22/%3E%3Crect%20x%3D%224%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23252a4a%22/%3E%3Crect%20x%3D%225%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23252a4a%22/%3E%3Crect%20x%3D%226%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%227%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%220%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%221%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%222%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23252a4a%22/%3E%3Crect%20x%3D%223%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23252a4a%22/%3E%3Crect%20x%3D%224%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23252a4a%22/%3E%3Crect%20x%3D%225%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23252a4a%22/%3E%3Crect%20x%3D%226%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%227%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%220%22%20y%3D%225%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%221%22%20y%3D%225%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%222%22%20y%3D%225%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23252a4a%22/%3E%3Crect%20x%3D%223%22%20y%3D%225%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23252a4a%22/%3E%3Crect%20x%3D%224%22%20y%3D%225%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23252a4a%22/%3E%3Crect%20x%3D%225%22%20y%3D%225%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23252a4a%22/%3E%3Crect%20x%3D%226%22%20y%3D%225%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%227%22%20y%3D%225%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%221%22%20y%3D%226%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%222%22%20y%3D%226%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%223%22%20y%3D%226%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%224%22%20y%3D%226%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%225%22%20y%3D%226%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%226%22%20y%3D%226%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%222%22%20y%3D%227%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%223%22%20y%3D%227%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%224%22%20y%3D%227%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%225%22%20y%3D%227%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3C/svg%3E") 3 fill stretch;
+  background:none;filter:drop-shadow(6px 6px 0 var(--dark));
+}
+.picker,.more{border-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%228%22%20height%3D%228%22%20shape-rendering%3D%22crispEdges%22%3E%3Crect%20x%3D%222%22%20y%3D%220%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%223%22%20y%3D%220%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%224%22%20y%3D%220%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%225%22%20y%3D%220%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%221%22%20y%3D%221%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%222%22%20y%3D%221%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%223%22%20y%3D%221%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%224%22%20y%3D%221%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%225%22%20y%3D%221%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%226%22%20y%3D%221%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%220%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%221%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%222%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%231b1f3a%22/%3E%3Crect%20x%3D%223%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%231b1f3a%22/%3E%3Crect%20x%3D%224%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%231b1f3a%22/%3E%3Crect%20x%3D%225%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%231b1f3a%22/%3E%3Crect%20x%3D%226%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%227%22%20y%3D%222%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%220%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%221%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%222%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%231b1f3a%22/%3E%3Crect%20x%3D%223%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%231b1f3a%22/%3E%3Crect%20x%3D%224%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%231b1f3a%22/%3E%3Crect%20x%3D%225%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%231b1f3a%22/%3E%3Crect%20x%3D%226%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%227%22%20y%3D%223%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%220%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%221%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%222%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%231b1f3a%22/%3E%3Crect%20x%3D%223%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%231b1f3a%22/%3E%3Crect%20x%3D%224%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%231b1f3a%22/%3E%3Crect%20x%3D%225%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%231b1f3a%22/%3E%3Crect%20x%3D%226%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%227%22%20y%3D%224%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%220%22%20y%3D%225%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%221%22%20y%3D%225%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%222%22%20y%3D%225%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%231b1f3a%22/%3E%3Crect%20x%3D%223%22%20y%3D%225%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%231b1f3a%22/%3E%3Crect%20x%3D%224%22%20y%3D%225%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%231b1f3a%22/%3E%3Crect%20x%3D%225%22%20y%3D%225%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%231b1f3a%22/%3E%3Crect%20x%3D%226%22%20y%3D%225%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%227%22%20y%3D%225%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%221%22%20y%3D%226%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%222%22%20y%3D%226%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%223%22%20y%3D%226%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%224%22%20y%3D%226%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%225%22%20y%3D%226%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%237d86b8%22/%3E%3Crect%20x%3D%226%22%20y%3D%226%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%222%22%20y%3D%227%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%223%22%20y%3D%227%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%224%22%20y%3D%227%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3Crect%20x%3D%225%22%20y%3D%227%22%20width%3D%221%22%20height%3D%221%22%20fill%3D%22%23eef0ff%22/%3E%3C/svg%3E") 3 fill stretch;filter:none}
+
+header{padding:10px 12px 8px;display:flex;flex-direction:column;gap:6px}
+header h1{font-family:var(--font);font-weight:400;font-size:30px;line-height:1.2;margin:0;color:var(--gold);
+  text-shadow:3px 3px 0 var(--dark);letter-spacing:.06em;text-wrap:balance}
+header h1::after{content:"_";color:var(--ink);animation:blink 1s steps(1) infinite}
+header p{margin:0;color:var(--sub);font-size:13.5px}
+
+.sec{display:flex;flex-direction:column;gap:16px}
+.sec-h{display:flex;align-items:center;gap:16px;margin-bottom:4px}
+.sec-h .no{font-size:42px;line-height:1;color:var(--ink);letter-spacing:.04em;
+  text-shadow:3px 3px 0 var(--dark),6px 6px 0 #3a4070}
+.sec-h h2{margin:0;font-weight:400;font-size:17px;background:var(--frame);color:var(--dark);padding:4px 14px;
+  filter:drop-shadow(4px 4px 0 var(--dark))}
+.hint{margin:0;color:var(--sub);font-size:13.5px}
+.hint b{color:var(--ink)}
+
+.round{padding:6px 10px 12px;display:flex;flex-direction:column;gap:14px}
+.round-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.round-name{font-size:17px}
+.round-type{margin-left:10px;font:inherit;font-size:17px;border:none;
+  background:var(--dark);color:var(--gold);padding:0 8px;box-shadow:inset 0 0 0 2px var(--gold)}
+.del{background:none;border:none;color:var(--sub);font:inherit;font-size:13px;cursor:pointer;padding:4px 2px}
+.del::before{content:"× "}
+.del:hover,.del:focus-visible{color:var(--ink);outline:none}
+.del.danger{color:#ff5a64}
+.del.danger:hover,.del.danger:focus-visible{color:#ff8a92}
+
+.axis{display:grid;grid-template-columns:2em 1fr 2em;align-items:center;gap:10px}
+.axis .lt{display:flex;justify-content:center;line-height:0}
+.axis .lt.on{color:var(--ink);text-shadow:2px 2px 0 var(--dark)}
+
+/* スワイプするゲージ：10マスの区切り */
+.track{position:relative;height:30px;background:var(--dark);border:3px solid var(--frame);
+  box-shadow:0 0 0 2px var(--dark);touch-action:none;cursor:ew-resize;outline:none}
+.track:focus-visible{box-shadow:0 0 0 2px var(--dark),0 0 0 5px var(--gold)}
+.track .fill{position:absolute;top:0;bottom:0;background:var(--neutral)}
+.track .fill.c{opacity:1}
+.track::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;
+  background:repeating-linear-gradient(90deg,transparent 0 calc(10% - 2px),var(--dark) calc(10% - 2px) 10%)}
+.track .mid{position:absolute;left:50%;top:-9px;bottom:-9px;width:3px;background:var(--sub);transform:translateX(-1px);z-index:2}
+.track .thumb{position:absolute;top:-10px;bottom:-10px;width:12px;background:var(--frame);transform:translateX(-6px);
+  box-shadow:0 0 0 3px var(--dark);pointer-events:none;z-index:3}
+.track .val{position:absolute;top:-30px;transform:translateX(-50%);font-size:12px;line-height:1.5;z-index:4;
+  background:var(--dark);color:var(--ink);padding:0 6px;box-shadow:inset 0 0 0 1px var(--sub);pointer-events:none;white-space:nowrap;font-variant-numeric:tabular-nums}
+.axis{margin-top:18px}
+
+/* ボタン：押すと影の分だけ沈む */
+.btn{font:inherit;font-size:15px;border:3px solid var(--frame);background:var(--win);color:var(--ink);
+  padding:8px 16px;cursor:pointer;box-shadow:0 0 0 2px var(--dark),4px 4px 0 2px var(--dark);position:relative}
+.btn:hover::before,.btn:focus-visible::before{content:"▶";position:absolute;left:-22px;color:var(--gold);text-shadow:2px 2px 0 var(--dark)}
+.btn:focus-visible{outline:none;border-color:var(--gold)}
+.btn:active{transform:translate(4px,4px);box-shadow:0 0 0 2px var(--dark)}
+.btn.main{background:var(--gold);color:var(--dark);border-color:var(--frame)}
+.btn.add{width:100%;border-style:dashed;background:transparent}
+.row{display:flex;gap:14px 18px;flex-wrap:wrap;align-items:center}
+
+/* 02 タイプの所持枠 */
+.types{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.tchip{position:relative;font:inherit;font-size:15px;padding:8px 0;cursor:pointer;
+  background:var(--win2);color:var(--sub);border:2px solid var(--sub);box-shadow:0 0 0 2px var(--dark)}
+.tchip:hover,.tchip:focus-visible{color:var(--ink);border-color:var(--ink);outline:none}
+.tchip.has{background:var(--win);color:var(--gold);border-color:var(--gold)}
+.tchip .dots{display:flex;justify-content:center;gap:3px;margin-top:4px}
+.tchip .dots i{width:6px;height:6px;display:block}
+.tchip:not(.has) .dots{opacity:.45}
+.tchip .n{position:absolute;top:-9px;right:-7px;background:var(--gold);color:var(--dark);font-size:11px;
+  min-width:20px;line-height:18px;box-shadow:0 0 0 2px var(--dark)}
+@keyframes bump{0%{transform:translateY(0)}30%{transform:translateY(-6px)}60%{transform:translateY(0)}80%{transform:translateY(-2px)}100%{transform:translateY(0)}}
+.tchip.bump{animation:bump .32s steps(5)}
+.tchip.bump .n{background:var(--sub)}
+.toast{min-height:1.75em;font-size:14px;color:var(--cyan);margin:0}
+.toast:not(:empty)::before{content:"＞ "}
+.picked{display:flex;flex-direction:column}
+.picked-row{display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:2px dotted var(--sub)}
+.picked-row b{font-size:16px;min-width:3.4em}
+.picked-row .cnt{flex:1;font-variant-numeric:tabular-nums;color:var(--sub)}
+.mini{font:inherit;font-size:13px;border:2px solid var(--frame);background:var(--win2);color:var(--ink);
+  padding:2px 10px;cursor:pointer;box-shadow:2px 2px 0 1px var(--dark)}
+.mini:hover,.mini:focus-visible{background:var(--frame);color:var(--dark);outline:none}
+.mini:active{transform:translate(2px,2px);box-shadow:none}
+.tally{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:var(--sub)}
+.tally b{font-size:16px}
+.tally .src{font-size:12px;color:var(--sub);margin-left:2px}
+.tally.col{flex-direction:column;gap:2px}
+.from1,.from1 b,.tally .src.from1{color:#ef7d57}
+
+.picker{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:6px}
+.picker p{grid-column:1/-1;margin:0;font-size:12.5px;color:var(--sub)}
+.picker button{font:inherit;font-size:15px;padding:6px 0;border:2px solid var(--sub);background:var(--win);color:var(--ink);cursor:pointer}
+.picker button:hover,.picker button:focus-visible{border-color:var(--gold);color:var(--gold);outline:none}
+.picker button.cur{background:var(--gold);color:var(--dark);border-color:var(--gold)}
+
+/* 03 質問：会話ウィンドウ */
+.qcard{padding:10px 12px 12px;display:flex;flex-direction:column;gap:16px}
+.qmeta{display:flex;justify-content:space-between;font-size:13px;color:var(--sub);font-variant-numeric:tabular-nums}
+.qtheme{font-size:18px;line-height:1.6;color:var(--ink)}
+.qtheme::after{content:" ▼";color:var(--sub);font-size:12px}
+.poles{display:grid;grid-template-columns:1fr 1fr;gap:14px;font-size:14.5px}
+.poles div{background:var(--win2);padding:8px 10px;box-shadow:inset 0 0 0 2px var(--sub)}
+.poles div:first-child::before{content:"◀ ";color:var(--gold)}
+.poles div:last-child{text-align:right}
+.poles div:last-child::after{content:" ▶";color:var(--gold)}
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.scale button{min-height:46px;border:2px solid var(--frame);background:var(--win2);cursor:pointer;font:inherit;font-size:12px;color:var(--ink);
+  box-shadow:2px 2px 0 1px var(--dark);padding:2px}
+.scale button:nth-child(1),.scale button:nth-child(5){background:var(--win)}
+.scale button:hover,.scale button:focus-visible{border-color:var(--gold);color:var(--gold);outline:none}
+.scale button.sel{background:var(--gold);color:var(--dark);border-color:var(--gold)}
+.scale button:active{transform:translate(2px,2px);box-shadow:none}
+.prog{height:12px;background:var(--dark);border:2px solid var(--frame);position:relative}
+.prog i{display:block;height:100%;background:var(--cyan)}
+.prog::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 6px,var(--dark) 6px 8px)}
+
+/* 04 判定：ステータス画面 */
+.result{padding:12px;display:flex;flex-direction:column;gap:18px}
+.big{display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap}
+.big .t{display:flex;gap:6px;line-height:0;
+  background:var(--dark);padding:10px 14px 8px;box-shadow:inset 0 0 0 3px var(--gold)}
+.big .s{color:var(--sub);font-size:13.5px}
+.big .s b{font-size:20px}
+.rax{display:flex;flex-direction:column;gap:6px}
+.rax-h{display:flex;justify-content:space-between;align-items:center;font-size:14px;gap:8px}
+.pill{font-size:12px;background:var(--win2);color:var(--ink);padding:0 8px;box-shadow:inset 0 0 0 2px var(--sub)}
+.pill.close{background:var(--gold);color:var(--dark);box-shadow:none}
+.rbar{position:relative;height:18px;background:var(--dark);border:2px solid var(--frame)}
+.rbar::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 calc(5% - 2px),var(--win2) calc(5% - 2px) 5%);pointer-events:none}
+.rbar .mid{position:absolute;left:50%;top:-6px;bottom:-6px;width:2px;background:var(--sub);z-index:2}
+.rbar .sd{position:absolute;top:4px;width:6px;height:6px;background:var(--neutral);transform:translateX(-3px);z-index:1}
+.rbar .pm{position:absolute;top:-4px;bottom:-4px;width:4px;background:var(--sub);transform:translateX(-2px);z-index:2}
+.rbar .fm{position:absolute;top:-7px;bottom:-7px;width:10px;background:var(--frame);transform:translateX(-5px);box-shadow:0 0 0 2px var(--dark);z-index:3}
+.rax p{margin:0;font-size:13px;color:var(--sub)}
+.legend{display:flex;gap:18px;font-size:12px;color:var(--sub);flex-wrap:wrap}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;margin-right:6px;vertical-align:-1px}
+.legend .a::before{background:var(--sub);width:4px}
+.legend .b::before{background:var(--frame)}
+.legend .c::before{background:var(--neutral);width:6px;height:6px;vertical-align:1px}
+.hist{display:flex;flex-direction:column;gap:6px;border-top:2px dotted var(--sub);padding-top:14px}
+.more{padding:6px 10px;display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.more p{margin:0;font-size:14px}
+.note{font-size:12px;color:var(--sub);margin:0}
+.wrap > .note{background:rgba(12,13,32,.94);padding:6px 10px}
+/* 全部リセット：赤い四角 */
+.reset-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:rgba(12,13,32,.94);padding:14px;box-shadow:0 0 0 2px #2a2f58}
+.reset-row .note{flex:1;min-width:12em}
+.btn-reset{font:inherit;font-size:15px;color:#fff;background:#d8323c;border:3px solid var(--frame);padding:10px 18px;cursor:pointer;
+  box-shadow:0 0 0 2px var(--dark),4px 4px 0 2px var(--dark);text-shadow:2px 2px 0 #6e1218}
+.btn-reset:hover,.btn-reset:focus-visible{background:#f04450;outline:none}
+.btn-reset:focus-visible{border-color:#ffd36b}
+.btn-reset:active{transform:translate(4px,4px);box-shadow:0 0 0 2px var(--dark)}
+.dlg-back{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:16px;
+  background:repeating-linear-gradient(45deg,rgba(7,8,15,.82) 0 4px,rgba(7,8,15,.9) 4px 8px)}
+.dlg-back[hidden]{display:none}
+.dlg{max-width:420px;width:100%;padding:8px 12px 12px;display:flex;flex-direction:column;gap:14px;
+  border:9px solid transparent;border-image:var(--frame-red) 3 fill stretch;filter:drop-shadow(6px 6px 0 var(--dark))}
+.dlg-title{margin:0;font-size:19px;color:#fff;text-shadow:2px 2px 0 var(--dark)}
+.dlg-text{margin:0;font-size:14px;color:var(--ink)}
+.enne{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:6px}
+.en{font:inherit;font-size:16px;padding:8px 0;white-space:nowrap;cursor:pointer;background:var(--win2);color:var(--sub);border:2px solid var(--sub);box-shadow:0 0 0 2px var(--dark)}
+.en:hover,.en:focus-visible{color:var(--ink);border-color:var(--ink);outline:none}
+.en[aria-pressed="true"]{background:var(--frame);color:var(--dark);border-color:var(--frame)}
+.enne-w{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center}
+.enne-w:empty{display:none}
+.mini[aria-pressed="true"]{background:var(--frame);color:var(--dark)}
+.mini.wing[aria-pressed="true"]{background:#ef7d57;border-color:#ef7d57;color:var(--dark)}
+/* 05 判定のゲージ */
+.rax{gap:4px}
+.rax-h{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:8px;margin-bottom:12px}
+.result .rax + .rax{margin-top:6px}
+.rax-h .side{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--sub)}
+.rax-h .side.r{justify-content:flex-end}
+.rax-h .now{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:22px;line-height:1.1;text-shadow:2px 2px 0 var(--dark)}
+.rax-h .now .pill{font-size:11px;text-shadow:none}
+.meter{display:grid;grid-template-columns:repeat(20,1fr);gap:3px;cursor:default}
+.meter i{display:block;height:14px;background:var(--win2);box-shadow:inset 0 0 0 1px #3a4070}
+.meter i.on{box-shadow:inset 0 -3px 0 rgba(0,0,0,.35)}
+.meter i:nth-child(10){margin-right:3px}
+.meter i:nth-child(11){margin-left:3px}
+.ends{display:flex;justify-content:space-between;font-size:11px;color:var(--sub);opacity:.8}
+.detail{border-top:2px dotted var(--sub);padding-top:12px}
+.redo{display:flex;flex-direction:column;gap:8px;align-items:flex-start;border-top:2px dotted var(--sub);padding-top:16px}
+.detail summary{cursor:pointer;color:var(--ink);font-size:14px;list-style:none}
+.detail summary::-webkit-details-marker{display:none}
+.detail summary::before{content:"▶ ";color:var(--sub)}
+.detail[open] summary::before{content:"▼ "}
+.detail summary:focus-visible{outline:2px solid var(--frame);outline-offset:3px}
+.detail-in{display:flex;flex-direction:column;gap:12px;margin-top:12px}
+.dl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.dl li{display:grid;grid-template-columns:5em 1fr;gap:10px;font-size:13px;color:var(--sub)}
+.dl li b{font-size:16px}
+/* スクショ添付 */
+.vh{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
+.file-lbl{position:relative;cursor:pointer;display:inline-block}
+.file-lbl:focus-within{background:var(--frame);color:var(--dark)}
+.round-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.thumb-btn{display:flex;align-items:center;gap:12px;background:var(--win2);border:2px solid var(--sub);padding:6px;cursor:zoom-in;font:inherit;color:var(--sub);font-size:12px;text-align:left}
+.thumb-btn:hover,.thumb-btn:focus-visible{border-color:var(--ink);color:var(--ink);outline:none}
+.thumb-btn img{height:64px;width:auto;max-width:120px;object-fit:cover;display:block;box-shadow:0 0 0 2px var(--dark)}
+.viewer{max-width:560px;border-image:none;border:3px solid var(--frame);background:var(--win)}
+.viewer img{max-width:100%;max-height:70vh;object-fit:contain;display:block;margin:0 auto;background:var(--dark)}
+.hint.err{color:#ff5a64}
+/* トップページ */
+/* 見出しはボタンと見分けがつくよう、白い箱ではなく文字＋下線にする */
+#top .sec-h h2{background:none;color:var(--ink);filter:none;padding:0 2px 4px;font-size:19px;
+  border-bottom:4px solid var(--sub);box-shadow:0 4px 0 var(--dark)}
+.title{padding:16px 14px 14px;gap:12px}
+.title h1{font-size:clamp(22px,7vw,34px);white-space:nowrap}
+.title p{font-size:14.5px;color:var(--ink)}
+.list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;font-size:14.5px}
+.list li{position:relative;padding-left:1.4em}
+.list li::before{content:"■";position:absolute;left:0;color:var(--sub);font-size:11px;top:.25em}
+.steps{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:16px}
+.steps li{display:grid;grid-template-columns:3em 1fr;gap:12px;align-items:start}
+.steps .n{font-size:26px;line-height:1;text-shadow:2px 2px 0 var(--dark),4px 4px 0 #3a4070}
+.steps b{font-size:15.5px}
+.steps p{margin:2px 0 0;font-size:13.5px;color:var(--sub)}
+.row.center{justify-content:center}
+.back{color:var(--sub);text-decoration:none;font-size:13px;align-self:flex-start}
+.back:hover,.back:focus-visible{color:var(--ink);outline:none}
+.foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--sub);
+  background:rgba(12,13,32,.94);padding:8px 12px;box-shadow:0 0 0 2px #2a2f58}
+.foot a{color:var(--ink)}
+.foot a:hover,.foot a:focus-visible{color:#ffd36b}
+@keyframes blink{50%{opacity:0}}
+@media (prefers-reduced-motion:reduce){
+  header h1::after,.qtheme::after{animation:none}
+  .tchip.bump{animation:none}
+}
+@media (max-width:420px){
+  header h1{font-size:24px}
+  .sec-h{gap:10px}
+  .sec-h .no{font-size:32px}
+  .sec-h h2{font-size:15px;padding:3px 10px}
+  .big .t{font-size:46px}
+  .scale button{font-size:11px}
+}
+</style>
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+
+<!-- トップページ -->
+<div class="wrap" id="top">
+  <header class="title">
+    <h1>タイプ再判定ノート</h1>
+    <p>ほかのサイトで出た性格診断の結果をもとに、迷っている軸だけを、追加の質問で確かめるアプリです。</p>
+    <div class="row">
+      <button class="btn main" id="startBtn2">はじめる</button>
+    </div>
+  </header>
+
+  <section class="sec" id="t1">
+    <div class="sec-h"><span class="no">?</span><h2>こんな人向け</h2></div>
+    <ul class="list">
+      <li>16Personalitiesなどで、受けるたびにタイプが変わる</li>
+      <li>T/F や J/P のように、50%近くで迷っている軸がある</li>
+      <li>何回か受けた結果をまとめて、自分のタイプを絞り込みたい</li>
+    </ul>
+  </section>
+
+  <section class="sec" id="t2">
+    <div class="sec-h"><span class="no">&gt;</span><h2>使い方</h2></div>
+    <ol class="steps">
+      <li><span class="n">01</span><div><b>これまでの結果</b><p>ほかのサイトで出た％に合わせて、4本のバーをスワイプします。受けた回数ぶん「＋ 結果を追加する」で増やせます。結果画面のスクショを添付しておくと、あとで見返せます。</p></div></li>
+      <li><span class="n">02</span><div><b>％を覚えていない過去の結果</b><p>％は忘れたけれどタイプだけ覚えている結果を、出た回数だけタップします。</p></div></li>
+      <li><span class="n">03</span><div><b>エニアグラム</b><p>自分のタイプがわかっている人だけ選びます。わからなければ空けたままで大丈夫です。</p></div></li>
+      <li><span class="n">04</span><div><b>追加の質問</b><p>「最近、実際にどうしたか」を思い出して答えます。思い出せない質問は飛ばせます。</p></div></li>
+      <li><span class="n">05</span><div><b>判定</b><p>判定が出ます。五分に近い軸が残ったら「中間に近いタイプを調べ直す」で、さらに質問に答えられます。</p></div></li>
+    </ol>
+  </section>
+
+  <section class="sec" id="t3">
+    <div class="sec-h"><span class="no">!</span><h2>注意点</h2></div>
+    <ul class="list">
+      <li><b>遊びとしての判定です。</b>正式なMBTI検査ではありません。16Personalitiesなどの結果も、正式なMBTIとは別のものです。</li>
+      <li>質問には「こうありたい」ではなく、<b>実際にしたこと</b>で答えてください。理想で答えると結果がずれます。</li>
+      <li>エニアグラムは、<b>わかっている場合だけ</b>入力してください。判定をあと押しする程度に使います。</li>
+      <li>1回で決めつけず、日をあけて何回か答えると判定が安定します。回数を重ねるほどブレが小さくなります。</li>
+      <li>入力した内容と添付したスクショは、<b>この端末のこのブラウザにだけ</b>保存されます。どこにも送信されません。ほかの端末とは共有されず、ブラウザのデータを消すと消えます。</li>
+      <li>タイプは自分を知るヒントです。人をタイプで決めつけないように使ってください。</li>
+    </ul>
+  </section>
+
+  <div class="row center"><button class="btn main" id="startBtn3">はじめる</button></div>
+  <footer class="foot"><span>Ver 1.00</span><span>作者 <a href="https://x.com/Kashtan_ILI">@Kashtan_ILI</a></span></footer>
+</div>
+
+<!-- アプリ本体 -->
+<div class="wrap" id="app" hidden>
+  <header>
+    <a class="back" href="#top">◀ トップへ</a>
+    <h1>タイプ再判定ノート</h1>
+    <p>16Personalitiesで出た結果を回数ぶん記録して、迷っている軸だけを追加の質問で確かめます。</p>
+  </header>
+
+  <section class="sec" id="s1">
+    <div class="sec-h"><span class="no">01</span><h2>これまでの結果</h2></div>
+    <p class="hint">他のサイトで出た結果の％に合わせて、バーを左右にスワイプしてください。最初の値は例です。</p>
+    <div id="rounds" class="sec"></div>
+    <button class="btn add" id="addRound">＋ 結果を追加する</button>
+  </section>
+
+  <section class="sec" id="s2">
+    <div class="sec-h"><span class="no">02</span><h2>％を覚えていない過去の結果</h2></div>
+    <p class="hint">出たことのあるタイプを、出た回数だけタップ。％より弱めに判定に入れます。</p>
+    <div class="types" id="types"></div>
+    <p class="toast" id="toast" aria-live="polite"></p>
+    <div class="picked" id="picked"></div>
+    <div>
+      <p class="hint" style="margin-bottom:4px">よく出たタイプ</p>
+      <div class="tally col" id="tally"></div>
+    </div>
+  </section>
+
+  <section class="sec" id="s2e">
+    <div class="sec-h"><span class="no">03</span><h2>エニアグラム</h2></div>
+    <p class="hint"><b>自分のタイプがわかっている場合だけ</b>選んでください。まだ迷っているなら空けたままにしてください。選ぶと、そのタイプに多いMBTIの傾向で判定を少しだけ動かします。</p>
+    <div class="enne" id="enneNums" role="group" aria-label="エニアグラムの番号"></div>
+    <div class="enne-w" id="enneWing"></div>
+    <p class="hint" id="enneInfo"></p>
+  </section>
+
+  <section class="sec" id="s3">
+    <div class="sec-h"><span class="no">04</span><h2>追加の質問</h2></div>
+    <div id="quizArea"></div>
+  </section>
+
+  <section class="sec" id="s4" hidden>
+    <div class="sec-h"><span class="no">05</span><h2>判定</h2></div>
+    <div id="resultArea"></div>
+  </section>
+
+  <div class="reset-row">
+    <button class="btn-reset" id="resetBtn" aria-haspopup="dialog">全部リセット</button>
+    <p class="note">01〜05で入力した内容と、質問の回答をすべて消します。</p>
+  </div>
+  <p class="note">遊びとしての判定です。正式なMBTI検査ではありません。</p>
+  <footer class="foot"><span>Ver 1.00</span><span>作者 <a href="https://x.com/Kashtan_ILI">@Kashtan_ILI</a></span></footer>
+</div>
+
+<div class="dlg-back" id="viewer" hidden>
+  <div class="dlg viewer" role="dialog" aria-modal="true" aria-labelledby="viewerTitle">
+    <p class="dlg-title" id="viewerTitle">スクショ</p>
+    <img id="viewerImg" alt="添付したスクショ">
+    <div class="row">
+      <button class="btn" id="viewerClose">閉じる</button>
+      <button class="del danger" id="viewerRemove">この画像を外す</button>
+    </div>
+  </div>
+</div>
+
+<div class="dlg-back" id="dlg" hidden>
+  <div class="dlg" role="alertdialog" aria-modal="true" aria-labelledby="dlgTitle" aria-describedby="dlgText">
+    <p class="dlg-title" id="dlgTitle">⚠️本当にリセットしますか？</p>
+    <p class="dlg-text" id="dlgText">これまでの結果、過去のタイプ、質問の回答がすべて消えます。元には戻せません。</p>
+    <div class="row">
+      <button class="btn-reset" id="dlgYes">リセットする</button>
+      <button class="btn" id="dlgNo">やめる</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const AXES=[
+  {k:"EI",l:"E",r:"I",ln:"外向",rn:"内向"},
+  {k:"SN",l:"S",r:"N",ln:"感覚",rn:"直観"},
+  {k:"FT",l:"F",r:"T",ln:"感情",rn:"思考"},
+  {k:"PJ",l:"P",r:"J",ln:"知覚",rn:"判断"}
+];
+// [場面, 左の極の行動, 右の極の行動] 実際にどうしたかを聞く
+const Q={
+EI:[
+ ["最近の休みの日、疲れが取れたのは","人と会って過ごしたあと","一人で過ごしたあと"],
+ ["最近、何かを決めかねたとき","誰かに話しながら考えた","一人で考えてから人に話した"],
+ ["最後に、知らない人が多い場にいたとき","自分から話しかけた","話しかけられるまで待っていた"],
+ ["最近、予定が急に空いたとき","誰かに連絡して会った","一人で過ごした"],
+ ["最近、人前で注目される場面があったとき","わりと楽しめた","早く終わってほしかった"],
+ ["最後に、人と長く話し込んだあと","もっと話していたかった","一人になりたくなった"],
+ ["この1年でよく会っていた相手","いろんな人と広く会った","決まった数人とだけ会った"],
+ ["最近、ちょっとした用事を伝えたとき","電話や直接話して伝えた","文字で送って伝えた"]
+],
+SN:[
+ ["最近、新しいことを教わって理解できたのは","具体例を見たとき","全体の仕組みを聞いたとき"],
+ ["最後に、新しい家電やアプリを使い始めたとき","説明やチュートリアルどおりに進めた","触りながら仕組みを推測した"],
+ ["最近、雑談で盛り上がったのは","実際にあった出来事の話","「もし〜だったら」の空想の話"],
+ ["最近、ぼんやりしている間に考えていたのは","今日や明日の具体的なこと","先の可能性や思いつき"],
+ ["最後に読んだり観たりした物語で、印象に残ったのは","描写や場面のリアルさ","裏にあるテーマや意味"],
+ ["最近、作業のやり方を選んだとき","前にうまくいった方法を使った","新しい方法を試した"],
+ ["最近の出来事を人に話したとき","細かい事実や数字を伝えた","雰囲気や印象を伝えた"],
+ ["最近、勘で「こうだ」と思ったとき","根拠を探してから決めた","勘のまま決めた"]
+],
+FT:[
+ ["最近、人から悩みを相談されたとき","気持ちを聞くことに時間を使った","解決策を考えることに時間を使った"],
+ ["最近迷ったことで、最後の決め手になったのは","関わる人の気持ち","理屈として筋が通るか"],
+ ["最近、注意や指摘を受けて最初に引っかかったのは","言い方や態度","内容が正しいかどうか"],
+ ["最近、身近な人が決まりを破ったとき","事情を聞いて大目に見た","決まりは決まりだと伝えた"],
+ ["最近言われて一番嬉しかったのは","優しさや気づかいへの言葉","能力や考え方への言葉"],
+ ["最近の話し合いで、自分が気にしていたのは","場の雰囲気","結論が正しいかどうか"],
+ ["最近、何かを決めたあとに気になったのは","みんなが納得しているか","合理的だったか"],
+ ["最後に観た映画やドラマで","登場人物に感情移入した","設定や展開の矛盾が気になった"]
+],
+PJ:[
+ ["最後に旅行やお出かけをしたとき","行ってから決めた","事前に予定を組んでいた"],
+ ["最近の、締め切りがある作業","直前に一気に片付けた","余裕をもって終わらせた"],
+ ["最近、予定が急に変わったとき","わりと楽しめた","かなりストレスだった"],
+ ["今の机や部屋の状態","散らかっているが場所は分かる","物の置き場所が決まっている"],
+ ["最近、何かを決める場面で","できるだけ先延ばしにした","早めに決めてすっきりした"],
+ ["最近の作業の進め方","気分でいくつも並行した","一つずつ順番に片付けた"],
+ ["最近のTo-doリストや予定表","作ったが見なくなった","実際に使って消していった"],
+ ["最近、少し大きめの買い物をしたとき","店で見ながら決めた","調べてから買いに行った"]
+]};
+// 追加の質問用（迷っている軸を深掘りするとき使う）
+Q.EI.push(
+ ["最近、仕事や作業の合間の休憩","誰かと雑談して過ごした","一人で静かに過ごした"],
+ ["最近、楽しいことがあったとき","すぐ誰かに話した","しばらく自分の中で味わった"],
+ ["最後に、飲み会やイベントに誘われたとき","わりと乗り気で行った","断るか、気が重いまま行った"],
+ ["最近、作業に集中できたのは","人の気配があるところ","一人きりの静かなところ"],
+ ["最近、何人かで話していたとき","自分がよく話していた","聞き役に回っていた"],
+ ["最近、週末の予定を立てたとき","人と会う予定を入れた","何も入れずに空けておいた"]);
+Q.SN.push(
+ ["最近、道を覚えたり説明したりしたとき","目印や曲がる回数で覚えた","方角や全体の位置関係で覚えた"],
+ ["最近、料理や工作をしたとき","レシピや手順どおりに作った","途中で自分なりに変えた"],
+ ["最近、人の話を聞いていて","話の細かいところまで覚えていた","要点だけ覚えていた"],
+ ["最近、新しい趣味や話題に触れたとき","まず実際にやってみた","まず背景や仕組みを調べた"],
+ ["最近、何かを人に説明したとき","順番どおりに具体的に話した","たとえ話を使った"],
+ ["最近、計画を立てたとき","今あるものでできる範囲から考えた","理想の形から逆算して考えた"]);
+Q.FT.push(
+ ["最近、誰かの作品や仕事に感想を言ったとき","まず良いところを伝えた","まず直したほうがいい点を伝えた"],
+ ["最近、頼みごとを断りたかったとき","悪い気がして引き受けた","理由を言って断った"],
+ ["最近、身近な人がミスをしたとき","まず落ち込んでいないか気にした","まず原因と対策を考えた"],
+ ["最近、買う物を選んだとき","気に入ったかどうかで決めた","性能や値段を比べて決めた"],
+ ["最近、意見がぶつかったとき","相手に合わせて収めた","自分の考えを最後まで説明した"],
+ ["最近、ニュースを見て気になったのは","関わった人の気持ちや境遇","原因や仕組み"]);
+Q.PJ.push(
+ ["最近の朝や夜の過ごし方","日によってばらばらだった","だいたい同じ流れだった"],
+ ["最近の待ち合わせや約束の時間","ぎりぎりか少し遅れた","早めに着いた"],
+ ["最近、休みの日の過ごし方を決めたのは","当日の気分で","前日までに"],
+ ["最近、作業の途中で別のことを思いついたとき","そっちに手をつけた","今の作業を終えてからにした"],
+ ["最近、出かける荷物の準備","出る直前にまとめた","前もって用意した"],
+ ["最近始めた作業や趣味","途中で止まっているものが多い","終わらせてから次に移った"]);
+// 繰り返し答えるための質問（各軸24問）
+Q.EI.push(
+ ["最近、新しい場や集まりに慣れるまで","早いうちに何人かと話すようになった","しばらく様子を見ていた"],
+ ["最近の移動中や待ち時間","人と連絡を取っていた","一人で音楽や考えごとをしていた"],
+ ["最近、困ったことがあったとき","すぐ誰かに相談した","まず自分で調べた"],
+ ["最近、知り合いを街で見かけたとき","自分から声をかけた","気づかれないようにした"],
+ ["最近、通話やボイスチャットに誘われたとき","気軽に参加した","できれば文字がよかった"],
+ ["最近、人が多い場所に長くいたあと","気分が上がっていた","ぐったりしていた"],
+ ["この数か月で、新しく知り合った人","何人も増えた","ほとんど増えていない"],
+ ["最近、自分の考えがまとまったきっかけ","人との会話","一人で書いたり考えたりした時間"],
+ ["最近、店員さんや知らない人に聞く場面で","迷わずすぐ聞いた","自分で探してから最後に聞いた"],
+ ["最後の連休や長い休みの最終日","人と会っていた","家で一人で過ごしていた"]);
+Q.SN.push(
+ ["最近、写真や絵を見て目がいったのは","細かい部分や色","全体の雰囲気や意味"],
+ ["最近、知らない言葉に出会ったとき","正確な意味を調べた","前後から推測して読み進めた"],
+ ["最近、ゲームや新しい遊びを始めたとき","ルールや操作を覚えてから始めた","とりあえず始めて試しながら覚えた"],
+ ["最近、ふと思いついたことを","実際に使えるかどうかで判断した","別のアイデアにつなげて広げた"],
+ ["最近、過去の出来事を思い出したとき","日時や場所から思い出した","そのときの感じや流れから思い出した"],
+ ["最近、人に何かを勧めたとき","実際の使い心地を伝えた","どんなことに使えそうかを伝えた"],
+ ["最近、仕事や勉強で引っかかったのは","手順や細かい数字","そもそもの目的や理由"],
+ ["最近、先のことを考えたとき","来週や来月の具体的な予定","何年も先のこと"],
+ ["最近、説明書や規約を読んだとき","上から順に読んだ","飛ばし読みして要点をつかんだ"],
+ ["最近、持ち物を整理したとき","今使っているかで判断した","この先使えそうかで判断した"]);
+Q.FT.push(
+ ["最近、何人かで役割を決めたとき","負担が偏らないようにした","得意な人に割り振った"],
+ ["最近、意見を求められたとき","傷つけない言い方を選んだ","思ったことをはっきり言った"],
+ ["最近、ルールや手順に不満を持ったとき","人に負担がかかるのが気になった","効率が悪いのが気になった"],
+ ["最近、自分が失敗したとき","周りにどう思われたかが気になった","何が原因だったかが気になった"],
+ ["最近、人を手伝ったとき","頼まれる前に手を貸した","頼まれてから手を貸した"],
+ ["最近、誰かの愚痴を聞いたとき","相づちを打って聞いていた","相手の思い違いを指摘した"],
+ ["最近、レビューや感想を書いたとき","自分がどう感じたかを書いた","良い点と悪い点を分けて書いた"],
+ ["最近、迷った選択で気にしたのは","後悔しないか","損をしないか"],
+ ["最近、相手の話の筋が通っていないと思ったとき","流した","指摘した"],
+ ["最近、プレゼントや差し入れを選んだとき","相手が喜ぶ顔を想像して選んだ","役に立つかどうかで選んだ"]);
+Q.PJ.push(
+ ["最近のメッセージの返信","気が向いたときにまとめて返した","来たら早めに返した"],
+ ["最近、外食の店を決めたとき","歩きながら決めた","前もって決めていた"],
+ ["最近の家事や用事","気づいたときにやった","曜日や時間を決めてやった"],
+ ["最近、大きめの作業を始めたとき","とりあえず手をつけた","段取りを決めてから始めた"],
+ ["最近、予定がある日の前日","特に準備しなかった","持ち物や流れを確認した"],
+ ["今のスマホやパソコンのファイル","置き場所はばらばら","フォルダ分けしてある"],
+ ["最近、何かを決めたあと","別の案がずっと気になった","決めたら迷わなかった"],
+ ["最近、急な誘いがあったとき","気軽に乗った","予定が崩れるので迷った"],
+ ["最近の作業のやめどき","気分が乗るところまで続けた","決めた区切りで止めた"],
+ ["最近のお金の使い方","その場で決めていた","予算を決めていた"]);
+// 5×7ドットの自作文字（タイプの8文字用）
+const GLYPH={
+ E:["11111","10000","10000","11110","10000","10000","11111"],
+ I:["11111","00100","00100","00100","00100","00100","11111"],
+ S:["01111","10000","10000","01110","00001","00001","11110"],
+ N:["10001","11001","10101","10101","10011","10001","10001"],
+ F:["11111","10000","10000","11110","10000","10000","10000"],
+ T:["11111","00100","00100","00100","00100","00100","00100"],
+ P:["11110","10001","10001","11110","10000","10000","10000"],
+ J:["00111","00010","00010","00010","00010","10010","01100"],
+ x:["01110","10001","00001","00110","00100","00000","00100"]};
+function glyph(L,color,u){
+  const g=GLYPH[L]||GLYPH.x;let sh="",fg="";
+  g.forEach((row,y)=>[...row].forEach((c,x)=>{if(c==="1"){
+    sh+=`<rect x="${x+1}" y="${y+1}" width="1" height="1"/>`;fg+=`<rect x="${x}" y="${y}" width="1" height="1"/>`;}}));
+  return `<svg width="${6*u}" height="${8*u}" viewBox="0 0 6 8" shape-rendering="crispEdges" aria-hidden="true"><g style="fill:#07080f">${sh}</g><g style="fill:${color}">${fg}</g></svg>`;
+}
+const TYPES=["ISTJ","ISFJ","INFJ","INTJ","ISTP","ISFP","INFP","INTP","ESTP","ESFP","ENFP","ENTP","ESTJ","ESFJ","ENFJ","ENTJ"];
+
+let S={rounds:[[62,71,68,58]],manual:{},enne:null,sessions:[],cur:null};
+try{const s=JSON.parse(localStorage.getItem("trn-v1"));if(s&&Array.isArray(s.rounds))S=s;}catch(e){}
+if(!Array.isArray(S.sessions))S.sessions=[];
+if(S.enne===undefined)S.enne=null;
+if(S.quiz){if(S.quiz.done){S.quiz.ever=true;S.sessions.push(S.quiz);}delete S.quiz;}
+if(S.cur===undefined||(S.cur!==null&&!S.sessions[S.cur]))S.cur=null;
+// 各回を見分けるID（スクショの保存先の鍵に使う）
+const newId=()=>"r"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+if(!Array.isArray(S.rid)||S.rid.length!==S.rounds.length)S.rid=S.rounds.map(()=>newId());
+
+/* ---------- スクショの保存（この端末のブラウザの IndexedDB にだけ置く） ---------- */
+const IMG=(function(){
+  const mem={};let dbp=null;
+  function db(){
+    if(dbp)return dbp;
+    dbp=new Promise((ok,ng)=>{
+      try{const r=indexedDB.open("trn-img",1);
+        r.onupgradeneeded=()=>r.result.createObjectStore("img");
+        r.onsuccess=()=>ok(r.result);r.onerror=()=>ng(r.error);}catch(e){ng(e);}
+    });
+    return dbp;
+  }
+  function tx(mode,fn){return db().then(d=>new Promise((ok,ng)=>{
+    const t=d.transaction("img",mode);const st=t.objectStore("img");const r=fn(st);
+    t.oncomplete=()=>ok(r&&r.result);t.onerror=()=>ng(t.error);})).catch(()=>FAIL);}
+  const FAIL={failed:true};
+  return{
+    get:id=>id in mem?Promise.resolve(mem[id]):tx("readonly",st=>st.get(id)).then(v=>(v&&!v.failed?(mem[id]=v,v):undefined)),
+    put:(id,v)=>{mem[id]=v;return tx("readwrite",st=>st.put(v,id)).then(r=>r!==FAIL);}, // true=ブラウザに保存できた
+    del:id=>{delete mem[id];return tx("readwrite",st=>st.delete(id));},
+    clear:()=>{for(const k in mem)delete mem[k];return tx("readwrite",st=>st.clear());}
+  };
+})();
+// 長い辺を最大1000pxに縮めてJPEGにする（保存容量を抑える）
+function shrink(file){
+  return new Promise((ok,ng)=>{
+    const url=URL.createObjectURL(file);const im=new Image();
+    im.onload=()=>{
+      const k=Math.min(1,1000/Math.max(im.width,im.height));
+      const c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);
+      c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(url);
+      ok(c.toDataURL("image/jpeg",0.82));
+    };
+    im.onerror=()=>{URL.revokeObjectURL(url);ng(new Error("画像を読み込めませんでした"));};
+    im.src=url;
+  });
+}
+function save(){try{localStorage.setItem("trn-v1",JSON.stringify(S));}catch(e){}}
+
+// v = 右側の文字の％（0〜100）
+function typeOf(vals){return vals.map((v,i)=>v>50?AXES[i].r:v<50?AXES[i].l:"x").join("");}
+function typeStr(vals){ // 16Pの表記順 E/I S/N T/F J/P
+  return typeOf(vals);
+}
+
+/* ---------- 01 結果入力 ---------- */
+const roundsEl=document.getElementById("rounds");
+let openPicker=null;
+// 伸びる側の色（E-I と P-J は指定なしなので基本色）
+const FILL={E:"#ffd36b",I:"#6e5ad6",S:"#ef7d57",N:"#a7f070",F:"#e43b44",T:"#41a6f6",P:"#ff7eb6",J:"#2f9e8f"};
+// 文字で表示するときの色（暗い地でも読めるよう、I と J は少し明るく）
+const TEXTC=Object.assign({},FILL,{I:"#8c7aff",J:"#38b8a6"});
+function renderRounds(){
+  roundsEl.innerHTML="";
+  S.rounds.forEach((vals,ri)=>{
+    const box=document.createElement("div");box.className="round";
+    const top=document.createElement("div");top.className="round-top";
+    top.innerHTML=`<div><span class="round-name">${ri+1}回目</span><span class="round-type" id="rt${ri}">${typeStr(vals)}</span></div>`;
+    const rid=S.rid[ri];
+    const tools=document.createElement("div");tools.className="round-tools";
+    // 端末によっては隠したinputをボタンから開けないため、input自体をラベルで包んで直接押せるようにする
+    const att=document.createElement("label");att.className="mini file-lbl";att.id="att-"+rid;
+    att.innerHTML=`<span>スクショを添付</span><input type="file" accept="image/*" id="file-${rid}" class="vh">`;
+    const file=att.querySelector("input");
+    file.onchange=async()=>{
+      const f=file.files&&file.files[0];if(!f)return;
+      const msg=statusLine(box,"画像を読み込んでいます…");
+      try{
+        const d=await shrink(f);const saved=await IMG.put(rid,d);
+        renderRounds();
+        if(!saved)setTimeout(()=>{const b=document.getElementById("th-"+rid);if(b)statusLine(b.parentNode,"この端末のブラウザでは画像を保存できませんでした。ページを閉じると画像は消えます。",true);},50);
+      }catch(e){msg.textContent="画像を読み込めませんでした。別の画像で試してください。";msg.classList.add("err");}
+    };
+    tools.append(att);
+    if(S.rounds.length>1){
+      const d=document.createElement("button");d.className="del";d.textContent="この回を消す";
+      d.onclick=()=>{S.rounds.splice(ri,1);S.rid.splice(ri,1);IMG.del(rid);save();renderRounds();renderTally();resetQuizIfAny();};
+      tools.appendChild(d);
+    }
+    top.appendChild(tools);
+    box.appendChild(top);
+    // 添付したスクショの小さな表示（タップで大きく）
+    const th=document.createElement("button");th.className="thumb-btn";th.hidden=true;th.id="th-"+rid;
+    th.setAttribute("aria-label",`${ri+1}回目のスクショを大きく見る`);
+    box.appendChild(th);
+    IMG.get(rid).then(src=>{
+      if(!src)return;
+      th.innerHTML=`<img src="${src}" alt=""><span>タップで大きく見る</span>`;th.hidden=false;
+      att.querySelector("span").textContent="スクショを差し替え";
+      th.onclick=()=>openViewer(rid,ri);
+    });
+    AXES.forEach((ax,ai)=>box.appendChild(makeSlider(ri,ai)));
+    roundsEl.appendChild(box);
+  });
+}
+function makeSlider(ri,ai){
+  const ax=AXES[ai];
+  const row=document.createElement("div");row.className="axis";
+  const L=document.createElement("span");L.className="lt";
+  const R=document.createElement("span");R.className="lt";
+  const tr=document.createElement("div");tr.className="track";tr.tabIndex=0;
+  tr.id=`sl-${ri}-${ai}`;tr.setAttribute("role","slider");
+  tr.setAttribute("aria-label",`${ri+1}回目 ${ax.l}と${ax.r}`);
+  tr.setAttribute("aria-valuemin","0");tr.setAttribute("aria-valuemax","100");
+  tr.innerHTML=`<div class="fill"></div><div class="mid"></div><div class="thumb"></div><div class="val"></div>`;
+  row.append(L,tr,R);
+  const fill=tr.querySelector(".fill"),th=tr.querySelector(".thumb"),val=tr.querySelector(".val");
+  function draw(){
+    const v=S.rounds[ri][ai];
+    th.style.left=v+"%";
+    fill.style.left=Math.min(v,50)+"%";fill.style.width=Math.abs(v-50)+"%";
+    const side=v>50?ax.r:ax.l;const col=FILL[side];
+    fill.style.background=col||"";fill.classList.toggle("c",!!col);
+    const pos=Math.min(88,Math.max(12,v));val.style.left=pos+"%";
+    val.textContent=v===50?"50 : 50":v>50?`${ax.r} ${v}%`:`${ax.l} ${100-v}%`;
+    L.classList.toggle("on",v<50);R.classList.toggle("on",v>50);
+    L.innerHTML=glyph(ax.l,v<50?TEXTC[ax.l]:"var(--sub)",3);R.innerHTML=glyph(ax.r,v>50?TEXTC[ax.r]:"var(--sub)",3);
+    tr.setAttribute("aria-valuenow",v);
+    tr.setAttribute("aria-valuetext",val.textContent);
+    const rt=document.getElementById("rt"+ri);if(rt)rt.textContent=typeStr(S.rounds[ri]);
+  }
+  function setFromX(x){
+    const r=tr.getBoundingClientRect();
+    let v=Math.round((x-r.left)/r.width*100);
+    v=Math.max(0,Math.min(100,v));
+    if(v!==S.rounds[ri][ai]){S.rounds[ri][ai]=v;draw();}
+  }
+  let drag=false;
+  tr.addEventListener("pointerdown",e=>{drag=true;tr.setPointerCapture(e.pointerId);setFromX(e.clientX);});
+  tr.addEventListener("pointermove",e=>{if(drag)setFromX(e.clientX);});
+  const end=()=>{if(drag){drag=false;save();renderTally();resetQuizIfAny();}};
+  tr.addEventListener("pointerup",end);tr.addEventListener("pointercancel",end);
+  tr.addEventListener("keydown",e=>{
+    let d=0;if(e.key==="ArrowLeft")d=-1;if(e.key==="ArrowRight")d=1;
+    if(!d)return;e.preventDefault();
+    S.rounds[ri][ai]=Math.max(0,Math.min(100,S.rounds[ri][ai]+d*(e.shiftKey?10:1)));
+    draw();save();renderTally();
+  });
+  draw();
+  return row;
+}
+document.getElementById("addRound").onclick=()=>{
+  S.rounds.push([50,50,50,50]);S.rid.push(newId());save();renderRounds();renderTally();resetQuizIfAny();
+  const last=roundsEl.lastElementChild;if(last)last.scrollIntoView({block:"nearest"});
+};
+
+/* ---------- 02 過去のタイプ ---------- */
+const typesEl=document.getElementById("types");
+let toastTimer=null;
+function toast(msg){
+  const el=document.getElementById("toast");el.textContent=msg;
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>{el.textContent="";},2200);
+}
+function manualChanged(){save();renderTypes();renderTally();resetQuizIfAny();}
+function renderTypes(bumped){
+  typesEl.innerHTML="";
+  TYPES.forEach(t=>{
+    const b=document.createElement("button");b.className="tchip";b.id="tc-"+t;
+    const n=S.manual[t]||0;if(n)b.classList.add("has");
+    if(t===bumped)b.classList.add("bump");
+    b.innerHTML=t+`<span class="dots">${[...t].map(L=>`<i style="background:${TEXTC[L]}"></i>`).join("")}</span>`+(n?`<span class="n">${n}</span>`:"");
+    b.setAttribute("aria-label",`${t} ${n}回。タップで1回追加`);
+    b.onclick=()=>{
+      const c=Math.min(99,(S.manual[t]||0)+1);S.manual[t]=c;
+      save();renderTypes(t);renderTally();resetQuizIfAny();
+      toast(`${t} を追加しました（${c}回）`);
+    };
+    typesEl.appendChild(b);
+  });
+  // 選択済みの一覧と消すボタン
+  const pk=document.getElementById("picked");pk.innerHTML="";
+  const ent=TYPES.filter(t=>S.manual[t]);
+  ent.forEach(t=>{
+    const r=document.createElement("div");r.className="picked-row";
+    r.innerHTML=`<b>${t}</b><span class="cnt">${S.manual[t]}回</span>`;
+    const m=document.createElement("button");m.className="mini";m.textContent="−1";m.id="mn-"+t;
+    m.onclick=()=>{S.manual[t]--;if(S.manual[t]<=0)delete S.manual[t];manualChanged();toast(`${t} を1回減らしました`);};
+    const d=document.createElement("button");d.className="mini";d.textContent="消す";d.id="rm-"+t;
+    d.onclick=()=>{delete S.manual[t];manualChanged();toast(`${t} を消しました`);};
+    r.append(m,d);pk.appendChild(r);
+  });
+  if(ent.length>1){
+    const r=document.createElement("div");r.className="picked-row";r.style.justifyContent="flex-end";
+    const a=document.createElement("button");a.className="del";a.textContent="選んだタイプを全部消す";a.id="rm-all";
+    a.onclick=()=>{S.manual={};manualChanged();toast("全部消しました");};
+    r.appendChild(a);pk.appendChild(r);
+  }
+}
+function counts(){
+  const c={};
+  S.rounds.forEach(v=>{const t=typeStr(v);if(!t.includes("x"))c[t]=(c[t]||0)+1;});
+  for(const t in S.manual)c[t]=(c[t]||0)+S.manual[t];
+  return Object.entries(c).sort((a,b)=>b[1]-a[1]);
+}
+function renderTally(){
+  const el=document.getElementById("tally");const c=counts();
+  // 01と02のどちらから来た回数かを分けて書く（02を消しても01の分は残るため）
+  const r1={};S.rounds.forEach(v=>{const t=typeStr(v);if(!t.includes("x"))r1[t]=(r1[t]||0)+1;});
+  el.innerHTML=c.length?c.map(([t,n])=>{
+    const a=r1[t]||0,b=S.manual[t]||0;
+    // 01の結果から数えた分だけ「（01で設定）」を添える。02と両方あるときは01の回数も書く
+    const note=a?`<small class="src from1">（01で設定${b?" "+a:""}）</small>`:"";
+    return `<span><b>${t}</b> ×${n}${note}</span>`;
+  }).join(""):`<span class="hint">まだありません</span>`;
+}
+
+/* ---------- 事前スコア ---------- */
+/* ---------- エニアグラム ---------- */
+// 番号ごとの傾き（右側の文字 I・N・T・J へのずれ、50%からの差）
+// タイプ論の掲示板で集計された自己申告の偏りを、弱めに丸めた値
+const ENNE={
+ 1:[3,-3,5,12], 2:[-8,0,-12,5], 3:[-8,0,6,5], 4:[8,10,-12,-3], 5:[12,8,12,0],
+ 6:[5,-6,0,8], 7:[-12,5,0,-12], 8:[-8,-2,10,6], 9:[8,0,-8,-6]};
+const ENNE_NAME={1:"改革する人",2:"助ける人",3:"達成する人",4:"個性的な人",5:"調べる人",6:"忠実な人",7:"熱中する人",8:"挑戦する人",9:"平和をもたらす人"};
+function enneShift(){
+  if(!S.enne)return null;
+  const a=ENNE[S.enne.n];const w=S.enne.w?ENNE[S.enne.w]:[0,0,0,0];
+  return a.map((v,i)=>v+w[i]*0.5);
+}
+function renderEnne(){
+  const nums=document.getElementById("enneNums");nums.innerHTML="";
+  for(let n=1;n<=9;n++){
+    const b=document.createElement("button");b.className="en";b.id="en-"+n;b.textContent="T"+n;
+    b.setAttribute("aria-pressed",S.enne&&S.enne.n===n?"true":"false");
+    b.setAttribute("aria-label",`タイプ${n} ${ENNE_NAME[n]}`);
+    b.onclick=()=>{S.enne=S.enne&&S.enne.n===n?null:{n,w:null};enneChanged();};
+    nums.appendChild(b);
+  }
+  const wing=document.getElementById("enneWing");wing.innerHTML="";
+  const info=document.getElementById("enneInfo");
+  if(!S.enne){info.textContent="未入力です。判定には使いません。";return;}
+  const n=S.enne.n,ws=[n===1?9:n-1,n===9?1:n+1];
+  const lab=document.createElement("span");lab.className="hint";lab.textContent="ウィング";wing.appendChild(lab);
+  [null,...ws].forEach(w=>{
+    const b=document.createElement("button");b.className="mini";b.id="ew-"+(w||0);
+    b.textContent=w?`${n}w${w}`:"わからない";if(w)b.classList.add("wing");
+    b.setAttribute("aria-pressed",S.enne.w===w?"true":"false");
+    b.onclick=()=>{S.enne.w=w;enneChanged();};
+    wing.appendChild(b);
+  });
+  const c=document.createElement("button");c.className="del";c.textContent="入力を消す";c.onclick=()=>{S.enne=null;enneChanged();};
+  wing.appendChild(c);
+  const sh=enneShift();
+  const lean=AXES.map((a,i)=>Math.abs(sh[i])<4?null:(sh[i]>0?a.r:a.l)).filter(Boolean);
+  info.innerHTML=`<b>${S.enne.w?n+"w"+S.enne.w:"T"+n}</b>（${ENNE_NAME[n]}）：${lean.length?lean.join("・")+" 寄りに少しだけ傾けます。":"どの軸もほとんど動かしません。"}`;
+}
+function enneChanged(){save();renderEnne();onInputChanged();}
+
+function prior(useEnne=true){
+  // 各回の％は重み1、％なしの過去タイプは1回あたり重み0.5で65%扱い
+  // エニアグラムは平均したあとに、傾きの4割を足すだけ（逆向きに引っぱらない）
+  const sh=useEnne?enneShift():null;
+  return AXES.map((ax,ai)=>{
+    let sum=0,w=0;
+    const base=(()=>{
+    S.rounds.forEach(v=>{sum+=v[ai];w+=1;});
+    for(const t in S.manual){
+      const n=S.manual[t];const letter=t[ai];
+      sum+=(letter===ax.r?65:35)*0.5*n;w+=0.5*n;
+    }
+    return w?sum/w:50;
+    })();
+    return sh?Math.max(0,Math.min(100,base+sh[ai]*0.4)):base;
+  });
+}
+function qCount(p){const m=Math.abs(p-50);return m<8?8:m<16?6:4;}
+
+/* ---------- 03 質問 ---------- */
+// S.sessions: 質問に答えた回の記録。S.cur: いま回答中の回の番号（なければnull）
+const quizEl=document.getElementById("quizArea");
+const AMBIG=8; // 最終スコアが50±8以内なら「まだ迷っている」
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+function doneSessions(){return S.sessions.filter((z,i)=>z.done&&i!==S.cur);}
+function usage(ai){ // 過去の回で何回出たか
+  const u=Q[AXES[ai].k].map(()=>0);
+  S.sessions.forEach(z=>z.list.forEach(it=>{if(it.ai===ai)u[it.qi]++;}));
+  return u;
+}
+function pickQ(ai,n,exclude){ // 出た回数が少ない質問から選ぶ
+  const u=usage(ai);
+  const idx=shuffle(Q[AXES[ai].k].map((_,i)=>i).filter(i=>!exclude.has(i)));
+  idx.sort((x,y)=>u[x]-u[y]);
+  return idx.slice(0,n);
+}
+function inSession(z,ai){return new Set(z.list.filter(it=>it.ai===ai).map(it=>it.qi));}
+function freeIn(z,ai){return Q[AXES[ai].k].length-inSession(z,ai).size;}
+function buildQuiz(){
+  const p=prior();const list=[];
+  AXES.forEach((a,ai)=>pickQ(ai,qCount(p[ai]),new Set()).forEach(qi=>list.push({ai,qi,flip:Math.random()<.5})));
+  shuffle(list);
+  S.sessions.push({list,ans:Array(list.length).fill(null),pos:0,done:false,extra:0,ever:false});
+  S.cur=S.sessions.length-1;save();renderQuiz();
+}
+function moreQuestions(amb){
+  const i=S.sessions.length-1;const z=S.sessions[i];const add=[];
+  amb.forEach(ai=>pickQ(ai,4,inSession(z,ai)).forEach(qi=>add.push({ai,qi,flip:Math.random()<.5})));
+  // どの軸を深掘りしているか分かりにくくするため、他の軸からも1問ずつ混ぜる
+  AXES.forEach((a,ai)=>{if(!amb.includes(ai))pickQ(ai,1,inSession(z,ai)).forEach(qi=>add.push({ai,qi,flip:Math.random()<.5}));});
+  shuffle(add);
+  z.pos=z.list.length;z.list.push(...add);z.ans.push(...add.map(()=>null));
+  z.done=false;z.extra=(z.extra||0)+1;S.cur=i;save();renderQuiz();
+  document.getElementById("s3").scrollIntoView({block:"start"});
+}
+function cancelQuiz(){
+  const z=S.sessions[S.cur];
+  if(!z.ever){S.sessions.splice(S.cur,1);}
+  else{ // 追加の質問の途中でやめたら、答えた分だけ残す
+    const keep=z.list.map((it,k)=>k).filter(k=>z.ans[k]!==null);
+    z.list=keep.map(k=>z.list[k]);z.ans=keep.map(k=>z.ans[k]);z.done=true;
+  }
+  S.cur=null;save();renderQuiz();
+}
+function onInputChanged(){ // 01・02を変えたら判定だけ計算し直す（回答の記録は残す）
+  if(S.cur===null)renderQuiz();
+}
+function resetQuizIfAny(){onInputChanged();}
+function renderQuiz(){
+  quizEl.innerHTML="";
+  const Z=S.cur!==null?S.sessions[S.cur]:null;
+  if(!Z){
+    const p=prior();
+    const total=p.reduce((s,v)=>s+qCount(v),0);
+    const n=doneSessions().length;
+    const d=document.createElement("div");d.className="sec";
+    d.innerHTML=n?
+      `<p class="hint">${n}回分の回答があります。もう1回答えると、前に出ていない質問を中心に${total}問出します。回数を重ねるほど％のブレが小さくなります。</p>`:
+      `<p class="hint">最近の自分が<b>実際にどうしたか</b>を思い出して答えてください。「こうありたい」「普段はこうなはず」ではなく、思い出せる出来事で選びます。思い出せないときは「思い出せない」を押せば飛ばせます。<br>質問は全部で${total}問です。何を測る質問かは、答え終わるまで表示しません。何回か繰り返すと判定が安定します。</p>`;
+    const row=document.createElement("div");row.className="row";
+    const b=document.createElement("button");b.className="btn main";b.id="startBtn";
+    b.textContent=n?`${n+1}回目の質問をはじめる`:"質問をはじめる";b.onclick=buildQuiz;
+    row.appendChild(b);
+    if(n){
+      const bk=document.createElement("button");bk.className="btn";bk.textContent="前回の回答を見直す";
+      bk.onclick=()=>{const i=S.sessions.length-1;S.sessions[i].done=false;S.sessions[i].pos=0;S.cur=i;save();renderQuiz();};
+      row.appendChild(bk);
+    }
+    d.appendChild(row);quizEl.appendChild(d);
+    if(n)renderResult();else document.getElementById("s4").hidden=true;
+    return;
+  }
+  const it=Z.list[Z.pos];const ax=AXES[it.ai];const q=Q[ax.k][it.qi];
+  const no=S.cur+1;
+  const c=document.createElement("div");c.className="qcard";
+  c.innerHTML=`
+    <div class="qmeta"><span>${String(Z.pos+1).padStart(2,"0")} / ${String(Z.list.length).padStart(2,"0")}</span><span>${no}回目${Z.extra?"・追加 "+Z.extra:""}</span></div>
+    <div class="prog"><i style="width:${Z.pos/Z.list.length*100}%"></i></div>
+    <div class="qtheme">${q[0]}</div>
+    <div class="poles"><div>${it.flip?q[2]:q[1]}</div><div>${it.flip?q[1]:q[2]}</div></div>`;
+  const sc=document.createElement("div");sc.className="scale";
+  const labels=["左だった","やや左","半々","やや右","右だった"];
+  const next=()=>{if(Z.pos<Z.list.length-1)Z.pos++;else{Z.done=true;Z.ever=true;S.cur=null;}save();renderQuiz();};
+  labels.forEach((lb,i)=>{
+    const b=document.createElement("button");b.textContent=lb;b.id=`ans-${i}`;
+    const v=it.flip?-(i-2):i-2; // 保存は軸の右側を＋とする
+    if(Z.ans[Z.pos]===v)b.classList.add("sel");
+    b.onclick=()=>{Z.ans[Z.pos]=v;next();};
+    sc.appendChild(b);
+  });
+  c.appendChild(sc);
+  const sk=document.createElement("button");sk.className="mini";sk.id="ans-skip";sk.textContent="思い出せない（飛ばす）";
+  if(Z.ans[Z.pos]==="skip")sk.style.background="var(--grid)";
+  sk.onclick=()=>{Z.ans[Z.pos]="skip";next();};
+  sk.style.alignSelf="flex-start";
+  c.appendChild(sk);
+  const nav=document.createElement("div");nav.className="row";
+  if(Z.pos>0){const b=document.createElement("button");b.className="btn";b.textContent="← ひとつ戻る";b.onclick=()=>{Z.pos--;save();renderQuiz();};nav.appendChild(b);}
+  const x=document.createElement("button");x.className="del";x.textContent="質問をやめる";x.onclick=cancelQuiz;nav.appendChild(x);
+  c.appendChild(nav);
+  quizEl.appendChild(c);
+  document.getElementById("s4").hidden=true;
+}
+
+/* ---------- 04 判定 ---------- */
+function sessAxis(z,ai){ // その回の、軸ごとの質問スコア（右側の％）
+  const xs=z.list.map((it,k)=>it.ai===ai?z.ans[k]:null).filter(v=>typeof v==="number");
+  return xs.length?{v:50+25*xs.reduce((s,v)=>s+v,0)/xs.length,n:xs.length}:null;
+}
+function renderResult(){
+  const ss=doneSessions();const p=prior();
+  const hasPrior=S.rounds.length>0||Object.keys(S.manual).length>0||!!S.enne;
+  const p0=S.enne?prior(false):null;
+  const n=ss.length;
+  // 入力した結果の重みは、質問の回数が増えるほど下げる
+  const wp=hasPrior?0.4/Math.sqrt(n):0;
+  const per=AXES.map((a,i)=>ss.map(z=>sessAxis(z,i)).filter(Boolean));
+  const qv=per.map(arr=>{const tot=arr.reduce((s,x)=>s+x.n,0);return tot?arr.reduce((s,x)=>s+x.v*x.n,0)/tot:null;});
+  const spread=per.map(arr=>{
+    if(arr.length<2)return null;
+    const m=arr.reduce((s,x)=>s+x.v,0)/arr.length;
+    return Math.sqrt(arr.reduce((s,x)=>s+(x.v-m)**2,0)/(arr.length-1));
+  });
+  const fin=AXES.map((a,i)=>qv[i]===null?p[i]:wp*p[i]+(1-wp)*qv[i]);
+  const letters=fin.map((v,i)=>v>50?AXES[i].r:v<50?AXES[i].l:(p[i]>=50?AXES[i].r:AXES[i].l));
+  const type=letters.join("");
+  const margins=fin.map(v=>Math.abs(v-50));
+  const wi=margins.indexOf(Math.min(...margins));
+  const alt=letters.slice();alt[wi]=letters[wi]===AXES[wi].r?AXES[wi].l:AXES[wi].r;
+  const c=counts();const top=c.length?c[0][0]:null;
+
+  const pct=(v,i)=>{const r=v>=50;return `${r?AXES[i].r:AXES[i].l} ${Math.round(r?v:100-v)}%`;};
+  const strength=m=>m<5?["ほぼ五分","close"]:m<15?["やや",""]:["はっきり",""];
+  // 判定は操作できない「ランプ」で表示：20マス（1マス5%）、真ん中から点灯
+  const meter=(v,col)=>{
+    // 少しでも寄っていれば1マスは点ける
+    const d=Math.abs(v-50);const lit=d<0.5?0:Math.max(1,Math.round(d/5));
+   let h="";
+    for(let k=0;k<20;k++){
+      const on=v>=50?(k>=10&&k<10+lit):(k<10&&k>=10-lit);
+      h+=`<i class="${on?"on":""}${k===10?" c":""}"${on?` style="background:${col}"`:""}></i>`;
+    }
+    return h;
+  };
+  // 軸ごと：大きな％表示＋ランプ（真ん中のすき間＝50:50）
+  const axesHtml=AXES.map((a,i)=>{
+    const [s,cl]=strength(margins[i]);const L=letters[i];const v=fin[i];
+    return `<div class="rax">
+      <div class="rax-h">
+        <span class="side">${glyph(a.l,L===a.l?TEXTC[a.l]:"var(--sub)",2)}<span>${a.ln}</span></span>
+        <span class="now"><span style="color:${TEXTC[L]}">${pct(v,i)}</span><span class="pill ${cl}">${s}</span></span>
+        <span class="side r"><span>${a.rn}</span>${glyph(a.r,L===a.r?TEXTC[a.r]:"var(--sub)",2)}</span>
+      </div>
+      <div class="meter" role="img" aria-label="${a.ln}と${a.rn}のうち ${pct(v,i)}">${meter(v,FILL[L])}</div>
+      <div class="ends"><span>${a.l} 100%</span><span>50 : 50</span><span>${a.r} 100%</span></div>
+    </div>`;}).join("");
+
+  // くわしい内訳（開いたときだけ読む）
+  const detail=AXES.map((a,i)=>{
+    const en=p0&&Math.round(Math.abs(p[i]-p0[i]))>=1?`（うちエニアグラムで ${p[i]>p0[i]?a.r:a.l} +${Math.round(Math.abs(p[i]-p0[i]))}）`:"";
+    const sp=spread[i]===null?"":`<br>回ごとのブレ ±${Math.round(spread[i])}%`;
+    const moved=(p[i]-50)*(fin[i]-50)<0?`<br>質問で反対側に動きました`:"";
+    return `<li><b style="color:${TEXTC[letters[i]]}">${pct(fin[i],i)}</b>
+      <span>入力した結果 ${pct(p[i],i)}${en}<br>質問の答え ${qv[i]===null?"回答なし":pct(qv[i],i)}${sp}${moved}</span></li>`;
+  }).join("");
+  const hist=ss.map((z,k)=>{
+    const t=AXES.map((a,i)=>{const x=sessAxis(z,i);const v=x?x.v:p[i];return v>50?a.r:v<50?a.l:(p[i]>=50?a.r:a.l);}).join("");
+    return `<span><b>${t}</b> ${k+1}回目</span>`;
+  }).join("");
+  const avgSp=spread.filter(v=>v!==null);
+  const spLine=avgSp.length?`回ごとのブレは平均 ±${Math.round(avgSp.reduce((s,v)=>s+v,0)/avgSp.length)}%`:"もう1回答えると、回ごとのブレが出せます";
+
+  const last=S.sessions[S.sessions.length-1];
+  const amb=AXES.map((a,i)=>i).filter(i=>margins[i]<AMBIG&&last&&freeIn(last,i));
+  const ambDone=AXES.map((a,i)=>i).filter(i=>margins[i]<AMBIG&&!(last&&freeIn(last,i)));
+  // 「調べ直す」：五分に近い軸があればその軸を追加で聞き、出し切っていたら別の質問で新しい回を始める
+  const near=[...amb,...ambDone].sort((x,y)=>x-y).map(i=>AXES[i].l+"–"+AXES[i].r).join("、");
+  const redoHint=amb.length?`${near} が五分に近いので、そこを中心に聞きます。`
+    :ambDone.length?`${near} が五分に近いままです。別の質問で、もう1回聞きます。`
+    :"五分に近い軸はありません。別の質問でもう1回聞いて、ブレを確かめます。";
+  const line=top?(top===type?`これまで一番多かった ${top} と同じ`:`これまで一番多かったのは ${top}`):"";
+  document.getElementById("resultArea").innerHTML=`
+    <div class="result">
+      <div class="big"><span class="t" aria-label="${type}">${letters.map(L=>glyph(L,TEXTC[L],8)).join("")}</span>
+        <span class="s">次の候補 <b>${alt.join("")}</b></span></div>
+      ${axesHtml}
+      <details class="detail">
+        <summary>くわしい内訳を見る</summary>
+        <div class="detail-in">
+          <ul class="dl">${detail}</ul>
+          <p class="hint">質問に答えた回：${n}回（${spLine}）</p>
+          <div class="tally">${hist}</div>
+          ${line?`<p class="hint">${line}</p>`:""}
+          <p class="note">最終判定は、入力した結果${Math.round(wp*100)}%・質問${Math.round((1-wp)*100)}%で計算しています。質問に答える回数が増えるほど、質問の比重が上がります。</p>
+          <div class="row"><button class="mini" id="againBtn">別の質問でもう1回答える</button></div>
+          <div class="row"><button class="del danger" id="dropLast">最後の回を消す</button><button class="del danger" id="dropAll">回答の記録をすべて消す</button></div>
+        </div>
+      </details>
+      <div class="redo">
+        <button class="btn main" id="redoBtn">中間に近いタイプを調べ直す</button>
+        <p class="hint">${redoHint}</p>
+      </div>
+    </div>`;
+  document.getElementById("redoBtn").onclick=()=>{
+    if(amb.length)moreQuestions(amb);
+    else{buildQuiz();document.getElementById("s3").scrollIntoView({block:"start"});}
+  };
+  document.getElementById("againBtn").onclick=()=>{buildQuiz();document.getElementById("s3").scrollIntoView({block:"start"});};
+  document.getElementById("dropLast").onclick=e=>confirmBox({
+    title:"⚠️最後の回を消しますか？",
+    text:`${n}回目に答えた質問の記録を消します。元には戻せません。`,
+    yes:"消す",run:()=>{S.sessions.pop();save();renderQuiz();}},e.currentTarget);
+  document.getElementById("dropAll").onclick=e=>confirmBox({
+    title:"⚠️回答の記録をすべて消しますか？",
+    text:`質問に答えた${n}回分の記録がすべて消えます。01〜03で入力した内容は残ります。元には戻せません。`,
+    yes:"すべて消す",run:()=>{S.sessions=[];save();renderQuiz();}},e.currentTarget);
+  document.getElementById("s4").hidden=false;
+}
+
+/* ---------- 背景：段々の夜空と星 ---------- */
+(function sky(){
+  const cv=document.getElementById("sky");const cx=cv.getContext("2d");
+  const P=4;let stars=[],words=[];
+  const FN=["Ni","Ne","Si","Se","Ti","Te","Fi","Fe"];
+  const LOW={i:["00100","00000","01100","00100","00100","00100","01110"],e:["00000","00000","01110","10001","11111","10000","01110"]};
+  const COL={N:"#a7f070",S:"#ef7d57",T:"#41a6f6",F:"#e43b44",i:"#8c7aff",e:"#ffd36b"};
+  function draw(tw){
+    const w=Math.ceil(innerWidth/P),h=Math.ceil(innerHeight/P);
+    if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h;
+      stars=[];let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+      for(let i=0;i<w*h/220;i++)stars.push([Math.floor(rnd()*w),Math.floor(rnd()*h*.8),rnd()]);
+      // 心理機能の文字を、夜空に薄く散らす（重ならないように置く）
+      words=[];const want=Math.max(4,Math.round(w*h/2600));
+      for(let t=0;t<want*20&&words.length<want;t++){
+        // 3つに1つほどは、画面の左右の端で見切れる位置に置く
+        const edge=rnd();
+        const x=edge<.17?-9+Math.floor(rnd()*6):edge<.34?w-8+Math.floor(rnd()*5):Math.floor(rnd()*(w-16));
+        const y=8+Math.floor(rnd()*(h*.82-14));
+        if(words.every(q=>Math.abs(q[0]-x)>18||Math.abs(q[1]-y)>12))words.push([x,y,FN[words.length%8]]);
+      }}
+    const bands=["#10112a","#121430","#151837","#191c3f","#1d2147","#22264f"];
+    bands.forEach((c,i)=>{cx.fillStyle=c;cx.fillRect(0,Math.floor(h*i/bands.length),w,Math.ceil(h/bands.length)+1);});
+    stars.forEach(([x,y,r])=>{
+      const on=tw?Math.random()>.08:true;
+      cx.fillStyle=r>.95?"#b7bde3":r>.75?"#5d6496":"#363b66";if(on)cx.fillRect(x,y,1,1);
+    });
+    cx.globalAlpha=.32;
+    // 文字は右上がり30度に傾けて描く
+    words.forEach(([x,y,f])=>{
+      cx.save();cx.translate(x,y);cx.rotate(-Math.PI/6);
+      [...f].forEach((ch,k)=>{
+        const g=GLYPH[ch]||LOW[ch];cx.fillStyle=COL[ch];
+        g.forEach((row,yy)=>[...row].forEach((b,xx)=>{if(b==="1")cx.fillRect(k*6+xx,yy,1,1);}));
+      });
+      cx.restore();
+    });
+    cx.globalAlpha=1;
+    // 地平線の山（ドットの影）
+    cx.fillStyle="#0b0c1c";let y=Math.floor(h*.9);
+    for(let x=0;x<w;x++){const t=Math.sin(x*.07)*3+Math.sin(x*.023)*6;cx.fillRect(x,Math.floor(h*.88+t),1,h);}
+  }
+  draw(false);addEventListener("resize",()=>draw(false));
+  if(!matchMedia("(prefers-reduced-motion: reduce)").matches)setInterval(()=>draw(true),900);
+})();
+
+/* ---------- スクショを大きく見る ---------- */
+function statusLine(box,msg,err){const p=document.createElement("p");p.className="hint"+(err?" err":"");p.textContent=msg;box.appendChild(p);return p;}
+const viewer=document.getElementById("viewer");
+function openViewer(rid,ri){
+  IMG.get(rid).then(src=>{
+    if(!src)return;
+    document.getElementById("viewerImg").src=src;
+    document.getElementById("viewerTitle").textContent=`${ri+1}回目のスクショ`;
+    viewer.hidden=false;document.getElementById("viewerClose").focus();
+    document.getElementById("viewerRemove").onclick=e=>confirmBox({
+      title:"⚠️このスクショを外しますか？",text:`${ri+1}回目に添付した画像を消します。バーの％はそのまま残ります。`,
+      yes:"外す",run:()=>{IMG.del(rid).then(()=>renderRounds());viewer.hidden=true;}},e.currentTarget);
+  });
+}
+document.getElementById("viewerClose").onclick=()=>{viewer.hidden=true;};
+viewer.addEventListener("click",e=>{if(e.target===viewer)viewer.hidden=true;});
+viewer.addEventListener("keydown",e=>{if(e.key==="Escape")viewer.hidden=true;});
+
+/* ---------- 確認ダイアログ（消す操作はすべてここを通す） ---------- */
+const confirmBox=(function(){
+  const dlg=document.getElementById("dlg");
+  const title=document.getElementById("dlgTitle"),text=document.getElementById("dlgText");
+  const yes=document.getElementById("dlgYes"),no=document.getElementById("dlgNo");
+  let back=null,act=null;
+  const close=()=>{dlg.hidden=true;if(back&&document.contains(back))back.focus();};
+  no.onclick=close;
+  dlg.addEventListener("click",e=>{if(e.target===dlg)close();});
+  dlg.addEventListener("keydown",e=>{
+    if(e.key==="Escape")close();
+    if(e.key==="Tab"){e.preventDefault();(document.activeElement===yes?no:yes).focus();}
+  });
+  yes.onclick=()=>{dlg.hidden=true;const f=act;act=null;if(f)f();};
+  return (opt,from)=>{
+    title.textContent=opt.title;text.textContent=opt.text;yes.textContent=opt.yes;
+    act=opt.run;back=from||null;dlg.hidden=false;no.focus();
+  };
+})();
+document.getElementById("resetBtn").onclick=e=>confirmBox({
+  title:"⚠️本当にリセットしますか？",
+  text:"これまでの結果、添付したスクショ、過去のタイプ、エニアグラム、質問の回答がすべて消えます。元には戻せません。",
+  yes:"リセットする",
+  run:()=>{
+    S={rounds:[[50,50,50,50]],rid:[newId()],manual:{},enne:null,sessions:[],cur:null};IMG.clear();
+    try{localStorage.removeItem("trn-v1");}catch(e){}
+    openPicker=null;save();
+    renderEnne();renderRounds();renderTypes();renderTally();renderQuiz();
+    document.getElementById("resultArea").innerHTML="";
+    document.getElementById("s4").hidden=true;
+    toast("すべてリセットしました");
+    window.scrollTo(0,0);
+  }},e.currentTarget);
+
+/* ---------- トップページとアプリの切り替え（#app でアプリ、それ以外はトップ） ---------- */
+function route(){
+  const app=location.hash==="#app";
+  document.getElementById("app").hidden=!app;
+  document.getElementById("top").hidden=app;
+  window.scrollTo(0,0);
+}
+const hasData=()=>S.sessions.length>0||Object.keys(S.manual).length>0||!!S.enne;
+["startBtn2","startBtn3"].forEach(id=>{
+  const b=document.getElementById(id);
+  if(hasData())b.textContent="つづきから";
+  b.onclick=()=>{location.hash="app";};
+});
+addEventListener("hashchange",route);route();
+
+renderEnne();renderRounds();renderTypes();renderTally();renderQuiz();
+</script>
+</body>
+</html>
