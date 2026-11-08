@@ -235,17 +235,7 @@ header p{margin:0;color:var(--sub);font-size:13.5px}
 .dl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
 .dl li{display:grid;grid-template-columns:5em 1fr;gap:10px;font-size:13px;color:var(--sub)}
 .dl li b{font-size:16px}
-/* スクショ添付 */
-.vh{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
-.file-lbl{position:relative;cursor:pointer;display:inline-block}
-.file-lbl:focus-within{background:var(--frame);color:var(--dark)}
-.round-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-.thumb-btn{display:flex;align-items:center;gap:12px;background:var(--win2);border:2px solid var(--sub);padding:6px;cursor:zoom-in;font:inherit;color:var(--sub);font-size:12px;text-align:left}
-.thumb-btn:hover,.thumb-btn:focus-visible{border-color:var(--ink);color:var(--ink);outline:none}
-.thumb-btn img{height:64px;width:auto;max-width:120px;object-fit:cover;display:block;box-shadow:0 0 0 2px var(--dark)}
-.viewer{max-width:560px;border-image:none;border:3px solid var(--frame);background:var(--win)}
-.viewer img{max-width:100%;max-height:70vh;object-fit:contain;display:block;margin:0 auto;background:var(--dark)}
-.hint.err{color:#ff5a64}
+.round-tools{display:flex;align-items:center;gap:10px;justify-content:flex-end}
 /* トップページ */
 /* 見出しはボタンと見分けがつくよう、白い箱ではなく文字＋下線にする */
 #top .sec-h h2{background:none;color:var(--ink);filter:none;padding:0 2px 4px;font-size:19px;
@@ -308,7 +298,7 @@ header p{margin:0;color:var(--sub);font-size:13.5px}
   <section class="sec" id="t2">
     <div class="sec-h"><span class="no">&gt;</span><h2>使い方</h2></div>
     <ol class="steps">
-      <li><span class="n">01</span><div><b>これまでの結果</b><p>ほかのサイトで出た％に合わせて、4本のバーをスワイプします。受けた回数ぶん「＋ 結果を追加する」で増やせます。結果画面のスクショを添付しておくと、あとで見返せます。</p></div></li>
+      <li><span class="n">01</span><div><b>これまでの結果</b><p>ほかのサイトで出た％に合わせて、4本のバーをスワイプします。受けた回数ぶん「＋ 結果を追加する」で増やせます。</p></div></li>
       <li><span class="n">02</span><div><b>％を覚えていない過去の結果</b><p>％は忘れたけれどタイプだけ覚えている結果を、出た回数だけタップします。</p></div></li>
       <li><span class="n">03</span><div><b>エニアグラム</b><p>自分のタイプがわかっている人だけ選びます。わからなければ空けたままで大丈夫です。</p></div></li>
       <li><span class="n">04</span><div><b>追加の質問</b><p>「最近、実際にどうしたか」を思い出して答えます。思い出せない質問は飛ばせます。</p></div></li>
@@ -323,7 +313,7 @@ header p{margin:0;color:var(--sub);font-size:13.5px}
       <li>質問には「こうありたい」ではなく、<b>実際にしたこと</b>で答えてください。理想で答えると結果がずれます。</li>
       <li>エニアグラムは、<b>わかっている場合だけ</b>入力してください。判定をあと押しする程度に使います。</li>
       <li>1回で決めつけず、日をあけて何回か答えると判定が安定します。回数を重ねるほどブレが小さくなります。</li>
-      <li>入力した内容と添付したスクショは、<b>この端末のこのブラウザにだけ</b>保存されます。どこにも送信されません。ほかの端末とは共有されず、ブラウザのデータを消すと消えます。</li>
+      <li>入力した内容は、<b>この端末のこのブラウザにだけ</b>保存されます。どこにも送信されません。ほかの端末とは共有されず、ブラウザのデータを消すと消えます。</li>
       <li>タイプは自分を知るヒントです。人をタイプで決めつけないように使ってください。</li>
     </ul>
   </section>
@@ -383,17 +373,6 @@ header p{margin:0;color:var(--sub);font-size:13.5px}
   </div>
   <p class="note">遊びとしての判定です。正式なMBTI検査ではありません。</p>
   <footer class="foot"><span>Ver 1.00</span><span>作者 <a href="https://x.com/Kashtan_ILI">@Kashtan_ILI</a></span></footer>
-</div>
-
-<div class="dlg-back" id="viewer" hidden>
-  <div class="dlg viewer" role="dialog" aria-modal="true" aria-labelledby="viewerTitle">
-    <p class="dlg-title" id="viewerTitle">スクショ</p>
-    <img id="viewerImg" alt="添付したスクショ">
-    <div class="row">
-      <button class="btn" id="viewerClose">閉じる</button>
-      <button class="del danger" id="viewerRemove">この画像を外す</button>
-    </div>
-  </div>
 </div>
 
 <div class="dlg-back" id="dlg" hidden>
@@ -558,44 +537,9 @@ if(S.cur===undefined||(S.cur!==null&&!S.sessions[S.cur]))S.cur=null;
 // 各回を見分けるID（スクショの保存先の鍵に使う）
 const newId=()=>"r"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 if(!Array.isArray(S.rid)||S.rid.length!==S.rounds.length)S.rid=S.rounds.map(()=>newId());
+// 以前の版で保存したスクショが残っていれば消しておく
+try{indexedDB.deleteDatabase("trn-img");}catch(e){}
 
-/* ---------- スクショの保存（この端末のブラウザの IndexedDB にだけ置く） ---------- */
-const IMG=(function(){
-  const mem={};let dbp=null;
-  function db(){
-    if(dbp)return dbp;
-    dbp=new Promise((ok,ng)=>{
-      try{const r=indexedDB.open("trn-img",1);
-        r.onupgradeneeded=()=>r.result.createObjectStore("img");
-        r.onsuccess=()=>ok(r.result);r.onerror=()=>ng(r.error);}catch(e){ng(e);}
-    });
-    return dbp;
-  }
-  function tx(mode,fn){return db().then(d=>new Promise((ok,ng)=>{
-    const t=d.transaction("img",mode);const st=t.objectStore("img");const r=fn(st);
-    t.oncomplete=()=>ok(r&&r.result);t.onerror=()=>ng(t.error);})).catch(()=>FAIL);}
-  const FAIL={failed:true};
-  return{
-    get:id=>id in mem?Promise.resolve(mem[id]):tx("readonly",st=>st.get(id)).then(v=>(v&&!v.failed?(mem[id]=v,v):undefined)),
-    put:(id,v)=>{mem[id]=v;return tx("readwrite",st=>st.put(v,id)).then(r=>r!==FAIL);}, // true=ブラウザに保存できた
-    del:id=>{delete mem[id];return tx("readwrite",st=>st.delete(id));},
-    clear:()=>{for(const k in mem)delete mem[k];return tx("readwrite",st=>st.clear());}
-  };
-})();
-// 長い辺を最大1000pxに縮めてJPEGにする（保存容量を抑える）
-function shrink(file){
-  return new Promise((ok,ng)=>{
-    const url=URL.createObjectURL(file);const im=new Image();
-    im.onload=()=>{
-      const k=Math.min(1,1000/Math.max(im.width,im.height));
-      const c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);
-      c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(url);
-      ok(c.toDataURL("image/jpeg",0.82));
-    };
-    im.onerror=()=>{URL.revokeObjectURL(url);ng(new Error("画像を読み込めませんでした"));};
-    im.src=url;
-  });
-}
 function save(){try{localStorage.setItem("trn-v1",JSON.stringify(S));}catch(e){}}
 
 // v = 右側の文字の％（0〜100）
@@ -619,37 +563,14 @@ function renderRounds(){
     top.innerHTML=`<div><span class="round-name">${ri+1}回目</span><span class="round-type" id="rt${ri}">${typeStr(vals)}</span></div>`;
     const rid=S.rid[ri];
     const tools=document.createElement("div");tools.className="round-tools";
-    // 端末によっては隠したinputをボタンから開けないため、input自体をラベルで包んで直接押せるようにする
-    const att=document.createElement("label");att.className="mini file-lbl";att.id="att-"+rid;
-    att.innerHTML=`<span>スクショを添付</span><input type="file" accept="image/*" id="file-${rid}" class="vh">`;
-    const file=att.querySelector("input");
-    file.onchange=async()=>{
-      const f=file.files&&file.files[0];if(!f)return;
-      const msg=statusLine(box,"画像を読み込んでいます…");
-      try{
-        const d=await shrink(f);const saved=await IMG.put(rid,d);
-        renderRounds();
-        if(!saved)setTimeout(()=>{const b=document.getElementById("th-"+rid);if(b)statusLine(b.parentNode,"この端末のブラウザでは画像を保存できませんでした。ページを閉じると画像は消えます。",true);},50);
-      }catch(e){msg.textContent="画像を読み込めませんでした。別の画像で試してください。";msg.classList.add("err");}
-    };
-    tools.append(att);
     if(S.rounds.length>1){
       const d=document.createElement("button");d.className="del";d.textContent="この回を消す";
-      d.onclick=()=>{S.rounds.splice(ri,1);S.rid.splice(ri,1);IMG.del(rid);save();renderRounds();renderTally();resetQuizIfAny();};
+      d.onclick=()=>{S.rounds.splice(ri,1);S.rid.splice(ri,1);save();renderRounds();renderTally();resetQuizIfAny();};
       tools.appendChild(d);
     }
     top.appendChild(tools);
     box.appendChild(top);
-    // 添付したスクショの小さな表示（タップで大きく）
-    const th=document.createElement("button");th.className="thumb-btn";th.hidden=true;th.id="th-"+rid;
-    th.setAttribute("aria-label",`${ri+1}回目のスクショを大きく見る`);
-    box.appendChild(th);
-    IMG.get(rid).then(src=>{
-      if(!src)return;
-      th.innerHTML=`<img src="${src}" alt=""><span>タップで大きく見る</span>`;th.hidden=false;
-      att.querySelector("span").textContent="スクショを差し替え";
-      th.onclick=()=>openViewer(rid,ri);
-    });
+
     AXES.forEach((ax,ai)=>box.appendChild(makeSlider(ri,ai)));
     roundsEl.appendChild(box);
   });
@@ -1092,23 +1013,6 @@ function renderResult(){
   if(!matchMedia("(prefers-reduced-motion: reduce)").matches)setInterval(()=>draw(true),900);
 })();
 
-/* ---------- スクショを大きく見る ---------- */
-function statusLine(box,msg,err){const p=document.createElement("p");p.className="hint"+(err?" err":"");p.textContent=msg;box.appendChild(p);return p;}
-const viewer=document.getElementById("viewer");
-function openViewer(rid,ri){
-  IMG.get(rid).then(src=>{
-    if(!src)return;
-    document.getElementById("viewerImg").src=src;
-    document.getElementById("viewerTitle").textContent=`${ri+1}回目のスクショ`;
-    viewer.hidden=false;document.getElementById("viewerClose").focus();
-    document.getElementById("viewerRemove").onclick=e=>confirmBox({
-      title:"⚠️このスクショを外しますか？",text:`${ri+1}回目に添付した画像を消します。バーの％はそのまま残ります。`,
-      yes:"外す",run:()=>{IMG.del(rid).then(()=>renderRounds());viewer.hidden=true;}},e.currentTarget);
-  });
-}
-document.getElementById("viewerClose").onclick=()=>{viewer.hidden=true;};
-viewer.addEventListener("click",e=>{if(e.target===viewer)viewer.hidden=true;});
-viewer.addEventListener("keydown",e=>{if(e.key==="Escape")viewer.hidden=true;});
 
 /* ---------- 確認ダイアログ（消す操作はすべてここを通す） ---------- */
 const confirmBox=(function(){
@@ -1131,10 +1035,10 @@ const confirmBox=(function(){
 })();
 document.getElementById("resetBtn").onclick=e=>confirmBox({
   title:"⚠️本当にリセットしますか？",
-  text:"これまでの結果、添付したスクショ、過去のタイプ、エニアグラム、質問の回答がすべて消えます。元には戻せません。",
+  text:"これまでの結果、過去のタイプ、エニアグラム、質問の回答がすべて消えます。元には戻せません。",
   yes:"リセットする",
   run:()=>{
-    S={rounds:[[50,50,50,50]],rid:[newId()],manual:{},enne:null,sessions:[],cur:null};IMG.clear();
+    S={rounds:[[50,50,50,50]],rid:[newId()],manual:{},enne:null,sessions:[],cur:null};
     try{localStorage.removeItem("trn-v1");}catch(e){}
     openPicker=null;save();
     renderEnne();renderRounds();renderTypes();renderTally();renderQuiz();
