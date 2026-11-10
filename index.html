@@ -21,7 +21,7 @@
 [hidden]{display:none!important}
 html,body{margin:0}
 html{background:var(--bg)}
-#sky{position:fixed;inset:0;width:100%;height:100%;z-index:-1;image-rendering:pixelated;pointer-events:none}
+#sky,#skytext{position:fixed;inset:0;width:100%;height:100%;z-index:-1;image-rendering:pixelated;pointer-events:none}
 body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;
   background:repeating-linear-gradient(0deg,rgba(0,0,0,.07) 0 1px,transparent 1px 3px)}
 body{
@@ -148,10 +148,10 @@ header p{margin:0;color:var(--sub);font-size:13.5px}
 .poles div:first-child::before{content:"◀ ";color:var(--gold)}
 .poles div:last-child{text-align:right}
 .poles div:last-child::after{content:" ▶";color:var(--gold)}
-.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.scale{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 .scale button{min-height:46px;border:2px solid var(--frame);background:var(--win2);cursor:pointer;font:inherit;font-size:12px;color:var(--ink);
   box-shadow:2px 2px 0 1px var(--dark);padding:2px}
-.scale button:nth-child(1),.scale button:nth-child(5){background:var(--win)}
+.scale button:nth-child(1),.scale button:nth-child(4){background:var(--win)}
 .scale button:hover,.scale button:focus-visible{border-color:var(--gold);color:var(--gold);outline:none}
 .scale button.sel{background:var(--gold);color:var(--dark);border-color:var(--gold)}
 .scale button:active{transform:translate(2px,2px);box-shadow:none}
@@ -225,6 +225,15 @@ header p{margin:0;color:var(--sub);font-size:13.5px}
 .meter i:nth-child(11){margin-left:3px}
 .ends{display:flex;justify-content:space-between;font-size:11px;color:var(--sub);opacity:.8}
 .detail{border-top:2px dotted var(--sub);padding-top:12px}
+.unsat{display:flex;flex-direction:column;gap:14px;width:100%}
+.pick{display:flex;flex-direction:column;gap:8px;align-items:flex-start;background:var(--win2);padding:10px 12px;box-shadow:inset 0 0 0 2px #3a4070}
+.pick-h{margin:0;font-size:15px;color:var(--ink)}
+.pick .types{width:100%}
+.axsel,.fsel{display:flex;flex-wrap:wrap;gap:6px}
+.fbtn .fn{font-size:15px}
+.fbtn[aria-pressed="true"]{background:var(--dark);border-color:var(--frame);box-shadow:0 0 0 2px var(--frame)}
+.fbtn[aria-pressed="true"]::after{content:" ✓";color:var(--ink);font-size:11px}
+.redo #unsatBtn::before{content:"? "}
 .redo{display:flex;flex-direction:column;gap:8px;align-items:flex-start;border-top:2px dotted var(--sub);padding-top:16px}
 .detail summary{cursor:pointer;color:var(--ink);font-size:14px;list-style:none}
 .detail summary::-webkit-details-marker{display:none}
@@ -236,6 +245,20 @@ header p{margin:0;color:var(--sub);font-size:13.5px}
 .dl li{display:grid;grid-template-columns:5em 1fr;gap:10px;font-size:13px;color:var(--sub)}
 .dl li b{font-size:16px}
 .round-tools{display:flex;align-items:center;gap:10px;justify-content:flex-end}
+.chg{color:#ef7d57}
+/* 機能の並び */
+.stack{display:flex;flex-direction:column;gap:8px;background:var(--win2);padding:10px 12px;box-shadow:inset 0 0 0 2px #3a4070}
+.stack-h{margin:0;font-size:12px;color:var(--sub)}
+.stack-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.st{display:flex;flex-direction:column;align-items:center;line-height:1.1;font-size:15px}
+.st small{font-size:10px;color:var(--sub)}
+.st0{font-size:24px}.st1{font-size:20px}
+.st0 .fn,.st1 .fn{text-shadow:2px 2px 0 var(--dark)}
+.arr{color:var(--sub);font-size:10px}
+.fl{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:6px 16px}
+.fl li{display:flex;align-items:center;gap:8px;font-size:14px}
+.fmeter{display:flex;gap:2px}
+.fmeter i{width:8px;height:10px;background:var(--win2);box-shadow:inset 0 0 0 1px #3a4070;display:block}
 /* トップページ */
 /* 見出しはボタンと見分けがつくよう、白い箱ではなく文字＋下線にする */
 #top .sec-h h2{background:none;color:var(--ink);filter:none;padding:0 2px 4px;font-size:19px;
@@ -275,6 +298,7 @@ header p{margin:0;color:var(--sub);font-size:13.5px}
 </head>
 <body>
 <canvas id="sky" aria-hidden="true"></canvas>
+<canvas id="skytext" aria-hidden="true"></canvas>
 
 <!-- トップページ -->
 <div class="wrap" id="top">
@@ -301,15 +325,16 @@ header p{margin:0;color:var(--sub);font-size:13.5px}
       <li><span class="n">01</span><div><b>これまでの結果</b><p>ほかのサイトで出た％に合わせて、4本のバーをスワイプします。受けた回数ぶん「＋ 結果を追加する」で増やせます。</p></div></li>
       <li><span class="n">02</span><div><b>％を覚えていない過去の結果</b><p>％は忘れたけれどタイプだけ覚えている結果を、出た回数だけタップします。</p></div></li>
       <li><span class="n">03</span><div><b>エニアグラム</b><p>自分のタイプがわかっている人だけ選びます。わからなければ空けたままで大丈夫です。</p></div></li>
-      <li><span class="n">04</span><div><b>追加の質問</b><p>「最近、実際にどうしたか」を思い出して答えます。思い出せない質問は飛ばせます。</p></div></li>
-      <li><span class="n">05</span><div><b>判定</b><p>判定が出ます。五分に近い軸が残ったら「中間に近いタイプを調べ直す」で、さらに質問に答えられます。</p></div></li>
+      <li><span class="n">04</span><div><b>追加の質問</b><p>「最近、実際にどうしたか」を思い出して、4択で答えます。「半々」はないので、少しでも近いほうを選んでください。行動の質問に加えて、どの心理機能が強いかを比べる質問も出ます。迷っているタイプの機能だけでなく、候補に入っていない機能も少し混ぜて、意外に強い機能がないか確かめます。思い出せない質問は飛ばせます。</p></div></li>
+      <li><span class="n">05</span><div><b>判定</b><p>タイプと、その機能の並び（第1〜第4機能）が出ます。五分に近い軸が残ったら「中間に近いタイプを調べ直す」で、さらに質問に答えられます。</p></div></li>
     </ol>
   </section>
 
   <section class="sec" id="t3">
     <div class="sec-h"><span class="no">!</span><h2>注意点</h2></div>
     <ul class="list">
-      <li><b>遊びとしての判定です。</b>正式なMBTI検査ではありません。16Personalitiesなどの結果も、正式なMBTIとは別のものです。</li>
+      <li><b>このアプリはMBTIではありません。</b>個人が作った非公式の判定ツールで、MBTI®（マイヤーズ・ブリッグス・タイプ指標）の公式な検査ではなく、その基準にも準拠していません。MBTIの公式団体や、16Personalitiesの運営元とは関係ありません。</li>
+      <li><b>遊びとしての判定です。</b>16Personalitiesなどの結果も、公式のMBTIとは別のものです。「INTJ」などの16タイプや心理機能の呼び方は、説明のために使っています。</li>
       <li>質問には「こうありたい」ではなく、<b>実際にしたこと</b>で答えてください。理想で答えると結果がずれます。</li>
       <li>エニアグラムは、<b>わかっている場合だけ</b>入力してください。判定をあと押しする程度に使います。</li>
       <li>1回で決めつけず、日をあけて何回か答えると判定が安定します。回数を重ねるほどブレが小さくなります。</li>
@@ -319,7 +344,8 @@ header p{margin:0;color:var(--sub);font-size:13.5px}
   </section>
 
   <div class="row center"><button class="btn main" id="startBtn3">はじめる</button></div>
-  <footer class="foot"><span>Ver 1.00</span><span>作者 <a href="https://x.com/Kashtan_ILI">@Kashtan_ILI</a></span></footer>
+  <p class="note">非公式のツールです。MBTI®の公式な検査ではなく、公式の基準にも準拠していません。</p>
+  <footer class="foot"><span>Ver 1.10</span><span>作者 <a href="https://x.com/Kashtan_ILI">@Kashtan_ILI</a></span></footer>
 </div>
 
 <!-- アプリ本体 -->
@@ -371,8 +397,8 @@ header p{margin:0;color:var(--sub);font-size:13.5px}
     <button class="btn-reset" id="resetBtn" aria-haspopup="dialog">全部リセット</button>
     <p class="note">01〜05で入力した内容と、質問の回答をすべて消します。</p>
   </div>
-  <p class="note">遊びとしての判定です。正式なMBTI検査ではありません。</p>
-  <footer class="foot"><span>Ver 1.00</span><span>作者 <a href="https://x.com/Kashtan_ILI">@Kashtan_ILI</a></span></footer>
+  <p class="note">このアプリは個人が作った非公式のツールで、MBTI®の公式な検査ではなく、公式の基準にも準拠していません。MBTIの公式団体や16Personalitiesの運営元とは関係ありません。遊びとしての判定です。</p>
+  <footer class="foot"><span>Ver 1.10</span><span>作者 <a href="https://x.com/Kashtan_ILI">@Kashtan_ILI</a></span></footer>
 </div>
 
 <div class="dlg-back" id="dlg" hidden>
@@ -526,6 +552,25 @@ function glyph(L,color,u){
     sh+=`<rect x="${x+1}" y="${y+1}" width="1" height="1"/>`;fg+=`<rect x="${x}" y="${y}" width="1" height="1"/>`;}}));
   return `<svg width="${6*u}" height="${8*u}" viewBox="0 0 6 8" shape-rendering="crispEdges" aria-hidden="true"><g style="fill:#07080f">${sh}</g><g style="fill:${color}">${fg}</g></svg>`;
 }
+// 心理機能：最近の行動として書いた文（2つの機能を並べて「どちらに近かったか」を聞く）
+const FSTAT={
+ Ni:["考えごとをしていて、急に全体のつながりが見えた","先の展開を一つに絞って予想し、その通りになった","細かいことより、物事の行き着く先が気になった","うまく説明できないが、確信のある見通しで動いた","ひとつのテーマを長いあいだ考え続けた","人の言葉の裏にある意図を読み取った"],
+ Ne:["話しているうちに、別のアイデアが次々と出てきた","ひとつのことから、いろいろな可能性を広げて考えた","新しいことを始めて、途中で別のことに興味が移った","関係なさそうなもの同士を結びつけて面白がった","「こうもできる」と選択肢を増やした","思いつきを、すぐ人に話してみた"],
+ Si:["前にうまくいったやり方を、そのまま使った","昔の似た経験を思い出して判断した","いつもの手順や習慣を崩さずに過ごした","体調や体の感覚の小さな変化に気づいた","記録やメモを見返して確かめた","慣れた店や道を選んだ"],
+ Se:["その場の状況にすぐ反応して動いた","目の前の物の色や音、手ざわりを楽しんだ","考えるより先に、まず体を動かしてやってみた","思い立ってすぐに出かけた","周りの変化に、誰より早く気づいた","その場の勢いで、思い切った選択をした"],
+ Ti:["自分が納得できるまで、仕組みを分解して考えた","言葉の定義や理屈の細かい矛盾が気になった","人の説明より、自分で筋道を確かめることを優先した","効率より、正確に理解することに時間を使った","頭の中で理屈を組み立て直した","「なぜそうなるのか」が分かるまで次に進めなかった"],
+ Te:["やることを決めて、期限までに片付けた","数字や結果で、うまくいったかを判断した","まわりの段取りを決めて、人を動かした","無駄な手順を見つけて、やり方を変えた","迷うより、まず決めて進めた","目標を立てて、達成までの計画を組んだ"],
+ Fi:["人に合わせず、自分の気持ちに正直に決めた","自分の価値観に合わないことを断った","言葉にしにくい自分の気持ちを、じっくり確かめた","好きなものを、人の評価と関係なく大事にした","自分らしくいられるかどうかで選んだ","納得できないことには、静かに従わなかった"],
+ Fe:["場の空気を読んで、雰囲気をよくしようと動いた","相手の気持ちに合わせて、言い方を変えた","困っている人に、自分から声をかけた","みんなが納得できる形に話をまとめた","人の気分が、自分の気分にも移った","相手が喜ぶことを考えて動いた"]};
+const FNS=Object.keys(FSTAT);
+// 各タイプの機能の並び（第1・第2・第3・第4）
+const STACK={INTJ:["Ni","Te","Fi","Se"],INFJ:["Ni","Fe","Ti","Se"],ISTJ:["Si","Te","Fi","Ne"],ISFJ:["Si","Fe","Ti","Ne"],
+ INTP:["Ti","Ne","Si","Fe"],ISTP:["Ti","Se","Ni","Fe"],INFP:["Fi","Ne","Si","Te"],ISFP:["Fi","Se","Ni","Te"],
+ ENTJ:["Te","Ni","Se","Fi"],ESTJ:["Te","Si","Ne","Fi"],ENFJ:["Fe","Ni","Se","Ti"],ESFJ:["Fe","Si","Ne","Ti"],
+ ENTP:["Ne","Ti","Fe","Si"],ENFP:["Ne","Fi","Te","Si"],ESTP:["Se","Ti","Fe","Ni"],ESFP:["Se","Fi","Te","Ni"]};
+const OPP={Ni:"Ne",Ne:"Ni",Si:"Se",Se:"Si",Ti:"Te",Te:"Ti",Fi:"Fe",Fe:"Fi"};
+// 機能名を色付きで（大文字は軸の色、i は I の紫、e は E の黄色）
+function fnHtml(F){return `<span class="fn"><span style="color:${TEXTC[F[0]]}">${F[0]}</span><span style="color:${TEXTC[F[1].toUpperCase()]}">${F[1]}</span></span>`;}
 const TYPES=["ISTJ","ISFJ","INFJ","INTJ","ISTP","ISFP","INFP","INTP","ESTP","ESFP","ENFP","ENTP","ESTJ","ESFJ","ENFJ","ENTJ"];
 
 let S={rounds:[[62,71,68,58]],manual:{},enne:null,sessions:[],cur:null};
@@ -745,12 +790,12 @@ function prior(useEnne=true){
     return sh?Math.max(0,Math.min(100,base+sh[ai]*0.4)):base;
   });
 }
-function qCount(p){const m=Math.abs(p-50);return m<8?8:m<16?6:4;}
+function qCount(p){const m=Math.abs(p-50);return m<8?6:m<16?4:3;}
 
 /* ---------- 03 質問 ---------- */
 // S.sessions: 質問に答えた回の記録。S.cur: いま回答中の回の番号（なければnull）
 const quizEl=document.getElementById("quizArea");
-const AMBIG=8; // 最終スコアが50±8以内なら「まだ迷っている」
+const AMBIG=10; // 60%を超えていればブレなし。50±10以内なら「まだ迷っている」
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
 function doneSessions(){return S.sessions.filter((z,i)=>z.done&&i!==S.cur);}
 function usage(ai){ // 過去の回で何回出たか
@@ -766,18 +811,131 @@ function pickQ(ai,n,exclude){ // 出た回数が少ない質問から選ぶ
 }
 function inSession(z,ai){return new Set(z.list.filter(it=>it.ai===ai).map(it=>it.qi));}
 function freeIn(z,ai){return Q[AXES[ai].k].length-inSession(z,ai).size;}
+/* 心理機能の質問を選ぶ */
+function fusage(F){ // その機能の各文が、これまで何回出たか
+  const u=FSTAT[F].map(()=>0);
+  S.sessions.forEach(z=>z.list.forEach(it=>{if(it.kind==="fn"){if(it.fa===F)u[it.fai]++;if(it.fb===F)u[it.fbi]++;}}));
+  return u;
+}
+function pickStat(F,used){
+  const u=fusage(F);
+  const idx=shuffle(FSTAT[F].map((_,i)=>i).filter(i=>!used.has(F+i)));
+  idx.sort((x,y)=>u[x]-u[y]);
+  return idx.length?idx[0]:null;
+}
+function usedStats(list){const u=new Set();list.forEach(it=>{if(it.kind==="fn"){u.add(it.fa+it.fai);u.add(it.fb+it.fbi);}});return u;}
+// 候補タイプ同士で違う第1・第2機能を比べる組を作る
+function fnPairs(cands){
+  const pairs=[];const key=(a,b)=>[a,b].sort().join("-");const seen=new Set();
+  const add=(a,b)=>{if(a!==b&&!seen.has(key(a,b))){seen.add(key(a,b));pairs.push([a,b]);}};
+  for(let i=0;i<cands.length;i++)for(let j=i+1;j<cands.length;j++){
+    const A=STACK[cands[i]],B=STACK[cands[j]];add(A[0],B[0]);add(A[1],B[1]);
+  }
+  // 候補が1つ（どの軸も65%以上）のときは、その並びが合っているかを確かめる
+  if(cands.length===1){const t=STACK[cands[0]];add(t[0],OPP[t[0]]);add(t[1],OPP[t[1]]);add(t[0],t[1]);}
+  return pairs;
+}
+function makeFnItems(pairs,per,list,max){
+  const used=usedStats(list);const out=[];
+  for(let r=0;r<per;r++)for(const [a,b] of pairs){
+    if(out.length>=max)break;
+    const ai=pickStat(a,used),bi=pickStat(b,used);if(ai===null||bi===null)continue;
+    used.add(a+ai);used.add(b+bi);out.push({kind:"fn",fa:a,fai:ai,fb:b,fbi:bi,flip:Math.random()<.5});
+  }
+  return out;
+}
+// 4軸の％から、16タイプそれぞれの確からしさ
+function axisTypeProb(v){
+  const pr=TYPES.map(t=>AXES.reduce((m,a,i)=>m*Math.max(.02,(t[i]===a.r?v[i]:100-v[i])/100),1));
+  const sum=pr.reduce((a,b)=>a+b,0);return pr.map(x=>x/sum);
+}
+// 65%以上の軸は文字を固定し、中間の軸だけ両方の文字を試して候補タイプを作る
+// 例：I・T・J が65%以上で S/N が中間 → INTJ と ISTJ（NiとSiで決める）
+const CLEAR=65;
+function candTypes(v){
+  let c=[""];
+  AXES.forEach((a,i)=>{
+    const strong=Math.max(v[i],100-v[i])>=CLEAR;
+    const opts=strong?[v[i]>=50?a.r:a.l]:[a.l,a.r];
+    c=c.flatMap(x=>opts.map(o=>x+o));
+  });
+  // 中間の軸が多いときは、確からしい順に4つまで
+  const pr=axisTypeProb(v);
+  return c.sort((x,y)=>pr[TYPES.indexOf(y)]-pr[TYPES.indexOf(x)]).slice(0,4);
+}
+function topTypes(prob,n){return TYPES.map((t,i)=>[t,prob[i]]).sort((a,b)=>b[1]-a[1]).slice(0,n).map(x=>x[0]);}
+// 抜き打ち：候補に入っていない機能を、候補の第1・第2機能と比べる（NT同士で迷う人の隠れたFeなどを拾う）
+function candFns(cands){const f=new Set();cands.forEach(t=>{f.add(STACK[t][0]);f.add(STACK[t][1]);});return f;}
+function probeItems(cands,list,n){
+  const inC=candFns(cands);
+  const seen=F=>S.sessions.reduce((m,z)=>m+z.list.filter(it=>it.kind==="fn"&&(it.fa===F||it.fb===F)).length,0);
+  const out=shuffle(FNS.filter(F=>!inC.has(F))).sort((a,b)=>seen(a)-seen(b)).slice(0,n);
+  // 比べる相手は候補の第1・第2機能。文を使い切っていたら別の候補機能、それでもなければ文の再使用を許す
+  const bases=[...new Set(cands.flatMap(t=>[STACK[t][0],STACK[t][1]]))];
+  const items=[];
+  out.forEach((F,k)=>{
+    let it=null;
+    for(let j=0;j<bases.length&&!it;j++)it=makeFnItems([[bases[(k+j)%bases.length],F]],1,list.concat(items),1)[0];
+    if(!it)it=makeFnItems([[bases[k%bases.length],F]],1,items,1)[0];
+    if(it){it.probe=true;items.push(it);}
+  });
+  return items;
+}
+// 抜き打ちで、候補の機能に勝った機能（＝意外に強い機能）
+function surprises(ss,fs){
+  const z=ss[ss.length-1];if(!z||!z.cands)return[];
+  const inC=candFns(z.cands);
+  return FNS.filter(F=>!inC.has(F)&&fs.cnt[F]>0&&fs.s(F)>=0.25);
+}
 function buildQuiz(){
   const p=prior();const list=[];
   AXES.forEach((a,ai)=>pickQ(ai,qCount(p[ai]),new Set()).forEach(qi=>list.push({ai,qi,flip:Math.random()<.5})));
+  // 心理機能の質問：中間の軸で分かれる候補タイプの、第1・第2機能の違いを聞く
+  const cands=candTypes(p);const fp=fnPairs(cands);
+  // 比べる組が1つだけ（例：NiとSi）のときは、5問聞いてしっかり決める
+  list.push(...makeFnItems(fp,fp.length===1?5:cands.length>1?3:2,list,12));
+  list.push(...probeItems(cands,list,2));
   shuffle(list);
-  S.sessions.push({list,ans:Array(list.length).fill(null),pos:0,done:false,extra:0,ever:false});
+  S.sessions.push({list,ans:Array(list.length).fill(null),pos:0,done:false,extra:0,ever:false,cands});
   S.cur=S.sessions.length-1;save();renderQuiz();
 }
-function moreQuestions(amb){
+function moreQuestions(amb,forced){
   const i=S.sessions.length-1;const z=S.sessions[i];const add=[];
-  amb.forEach(ai=>pickQ(ai,4,inSession(z,ai)).forEach(qi=>add.push({ai,qi,flip:Math.random()<.5})));
+  // 「結果に納得できない」で選んだタイプと比べるときは、文字が違う軸を聞き直す
+  if(forced)amb=AXES.map((a,k)=>k).filter(k=>forced[0][k]!==forced[1][k]);
+  amb.forEach(ai=>pickQ(ai,3,inSession(z,ai)).forEach(qi=>add.push({ai,qi,flip:Math.random()<.5})));
+  // 心理機能でも決着をつける：いま上位の2タイプの機能の違いを聞く
+  const R=computeResult();
+  let cands=forced||candTypes(R.fin);if(cands.length<2)cands=topTypes(R.prob,2);
+  // 意外に強く出た機能があれば、その機能を第1・第2に持つタイプも候補に入れて確かめる
+  const sur=surprises(R.ss,R.fs);
+  if(sur.length&&!forced){
+    const sp=R.fprob||R.prob;
+    const extra=TYPES.filter(t=>sur.some(F=>STACK[t][0]===F||STACK[t][1]===F))
+      .sort((a,b)=>sp[TYPES.indexOf(b)]-sp[TYPES.indexOf(a)]).slice(0,2);
+    cands=[...new Set([...cands.slice(0,2),...extra])];
+  }
+  z.cands=cands;
+  const fp=fnPairs(cands);
+  add.push(...makeFnItems(fp,fp.length===1?4:2,z.list.concat(add),8));
   // どの軸を深掘りしているか分かりにくくするため、他の軸からも1問ずつ混ぜる
   AXES.forEach((a,ai)=>{if(!amb.includes(ai))pickQ(ai,1,inSession(z,ai)).forEach(qi=>add.push({ai,qi,flip:Math.random()<.5}));});
+  shuffle(add);
+  z.pos=z.list.length;z.list.push(...add);z.ans.push(...add.map(()=>null));
+  z.done=false;z.extra=(z.extra||0)+1;S.cur=i;save();renderQuiz();
+  document.getElementById("s3").scrollIntoView({block:"start"});
+}
+// 自分で選んだ軸・機能の組だけを追加で聞く
+function customQuestions(o){
+  const i=S.sessions.length-1;const z=S.sessions[i];const add=[];
+  (o.axes||[]).forEach(ai=>pickQ(ai,4,inSession(z,ai)).forEach(qi=>add.push({ai,qi,flip:Math.random()<.5})));
+  if(o.pair){
+    // その組の文を使い切っていたら、これまで出た回数が少ない文をもう一度使う
+    let it=makeFnItems([o.pair],4,z.list,4);
+    for(let r=0;it.length<4&&r<4;r++)it=it.concat(makeFnItems([o.pair],1,it,1));
+    add.push(...it);
+  }
+  if(!add.length)return;
   shuffle(add);
   z.pos=z.list.length;z.list.push(...add);z.ans.push(...add.map(()=>null));
   z.done=false;z.extra=(z.extra||0)+1;S.cur=i;save();renderQuiz();
@@ -801,12 +959,14 @@ function renderQuiz(){
   const Z=S.cur!==null?S.sessions[S.cur]:null;
   if(!Z){
     const p=prior();
-    const total=p.reduce((s,v)=>s+qCount(v),0);
+    const c0=candTypes(p);
+    const f0=fnPairs(c0);
+    const total=p.reduce((s,v)=>s+qCount(v),0)+makeFnItems(f0,f0.length===1?5:c0.length>1?3:2,[],12).length+2;
     const n=doneSessions().length;
     const d=document.createElement("div");d.className="sec";
     d.innerHTML=n?
       `<p class="hint">${n}回分の回答があります。もう1回答えると、前に出ていない質問を中心に${total}問出します。回数を重ねるほど％のブレが小さくなります。</p>`:
-      `<p class="hint">最近の自分が<b>実際にどうしたか</b>を思い出して答えてください。「こうありたい」「普段はこうなはず」ではなく、思い出せる出来事で選びます。思い出せないときは「思い出せない」を押せば飛ばせます。<br>質問は全部で${total}問です。何を測る質問かは、答え終わるまで表示しません。何回か繰り返すと判定が安定します。</p>`;
+      `<p class="hint">最近の自分が<b>実際にどうしたか</b>を思い出して答えてください。「こうありたい」「普段はこうなはず」ではなく、思い出せる出来事で選びます。答えは4択で、「半々」はありません。少しでも近いほうを選んでください。思い出せないときは「思い出せない」を押せば飛ばせます。<br>行動の質問と、心理機能の質問をあわせて${total}問です。何を測る質問かは、答え終わるまで表示しません。何回か繰り返すと判定が安定します。</p>`;
     const row=document.createElement("div");row.className="row";
     const b=document.createElement("button");b.className="btn main";b.id="startBtn";
     b.textContent=n?`${n+1}回目の質問をはじめる`:"質問をはじめる";b.onclick=buildQuiz;
@@ -820,20 +980,25 @@ function renderQuiz(){
     if(n)renderResult();else document.getElementById("s4").hidden=true;
     return;
   }
-  const it=Z.list[Z.pos];const ax=AXES[it.ai];const q=Q[ax.k][it.qi];
+  const it=Z.list[Z.pos];
+  // 行動の質問（軸）と心理機能の質問で、文の出し方だけ変える。どちらも右側を＋で保存
+  let theme,L,Rt;
+  if(it.kind==="fn"){theme="最近の自分に、より近かったのは";L=FSTAT[it.fa][it.fai];Rt=FSTAT[it.fb][it.fbi];}
+  else{const q=Q[AXES[it.ai].k][it.qi];theme=q[0];L=q[1];Rt=q[2];}
   const no=S.cur+1;
   const c=document.createElement("div");c.className="qcard";
   c.innerHTML=`
     <div class="qmeta"><span>${String(Z.pos+1).padStart(2,"0")} / ${String(Z.list.length).padStart(2,"0")}</span><span>${no}回目${Z.extra?"・追加 "+Z.extra:""}</span></div>
     <div class="prog"><i style="width:${Z.pos/Z.list.length*100}%"></i></div>
-    <div class="qtheme">${q[0]}</div>
-    <div class="poles"><div>${it.flip?q[2]:q[1]}</div><div>${it.flip?q[1]:q[2]}</div></div>`;
+    <div class="qtheme">${theme}</div>
+    <div class="poles"><div>${it.flip?Rt:L}</div><div>${it.flip?L:Rt}</div></div>`;
   const sc=document.createElement("div");sc.className="scale";
-  const labels=["左だった","やや左","半々","やや右","右だった"];
+  // 「半々」はなし。4択で、どちらかに寄せてもらう
+  const labels=[["左だった",-2],["やや左",-1],["やや右",1],["右だった",2]];
   const next=()=>{if(Z.pos<Z.list.length-1)Z.pos++;else{Z.done=true;Z.ever=true;S.cur=null;}save();renderQuiz();};
-  labels.forEach((lb,i)=>{
+  labels.forEach(([lb,raw],i)=>{
     const b=document.createElement("button");b.textContent=lb;b.id=`ans-${i}`;
-    const v=it.flip?-(i-2):i-2; // 保存は軸の右側を＋とする
+    const v=it.flip?-raw:raw; // 保存は右側（軸の右の文字・2つめの機能）を＋とする
     if(Z.ans[Z.pos]===v)b.classList.add("sel");
     b.onclick=()=>{Z.ans[Z.pos]=v;next();};
     sc.appendChild(b);
@@ -857,7 +1022,37 @@ function sessAxis(z,ai){ // その回の、軸ごとの質問スコア（右側�
   const xs=z.list.map((it,k)=>it.ai===ai?z.ans[k]:null).filter(v=>typeof v==="number");
   return xs.length?{v:50+25*xs.reduce((s,v)=>s+v,0)/xs.length,n:xs.length}:null;
 }
+// 心理機能の強さ（-1〜1）。比べて勝った機能が＋、負けた機能が−
+function fnScores(ss){
+  const sc={},cnt={};FNS.forEach(F=>{sc[F]=0;cnt[F]=0;});
+  ss.forEach(z=>z.list.forEach((it,k)=>{
+    const v=z.ans[k];if(it.kind!=="fn"||typeof v!=="number")return;
+    sc[it.fa]-=v/2;sc[it.fb]+=v/2;cnt[it.fa]++;cnt[it.fb]++;
+  }));
+  const s=F=>cnt[F]?sc[F]/cnt[F]:0;
+  return{s,cnt,has:FNS.some(F=>cnt[F]>0)};
+}
+function computeResult(){
+  const ss=doneSessions();const p=prior();
+  const hasPrior=S.rounds.length>0||Object.keys(S.manual).length>0||!!S.enne;
+  const n=ss.length;const wp=hasPrior?0.4/Math.sqrt(Math.max(1,n)):0;
+  const per=AXES.map((a,i)=>ss.map(z=>sessAxis(z,i)).filter(Boolean));
+  const qv=per.map(arr=>{const tot=arr.reduce((s,x)=>s+x.n,0);return tot?arr.reduce((s,x)=>s+x.v*x.n,0)/tot:null;});
+  const finAxis=AXES.map((a,i)=>qv[i]===null?p[i]:wp*p[i]+(1-wp)*qv[i]);
+  // 心理機能から見たタイプの確からしさ（第1機能3・第2機能2・第3機能0.5の重み）
+  const fs=fnScores(ss);let fprob=null,fAxis=null,fin=finAxis;
+  if(fs.has){
+    const ts=TYPES.map(t=>{const st=STACK[t];return 3*fs.s(st[0])+2*fs.s(st[1])+0.5*fs.s(st[2]);});
+    const mx=Math.max(...ts);const ex=ts.map(v=>Math.exp((v-mx)*1.2));const sum=ex.reduce((a,b)=>a+b,0);
+    fprob=ex.map(v=>v/sum);
+    fAxis=AXES.map((a,i)=>Math.max(15,Math.min(85,100*TYPES.reduce((m,t,k)=>m+(t[i]===a.r?fprob[k]:0),0))));
+    // 軸の判定6割・心理機能の判定4割（タイプが変わると第1機能も変わるので、機能の並びとして筋が通る側に寄せる）
+    fin=finAxis.map((v,i)=>0.6*v+0.4*fAxis[i]);
+  }
+  return{ss,p,qv,per,finAxis,fin,fs,fprob,fAxis,wp,prob:axisTypeProb(fin)};
+}
 function renderResult(){
+  const R0=computeResult();
   const ss=doneSessions();const p=prior();
   const hasPrior=S.rounds.length>0||Object.keys(S.manual).length>0||!!S.enne;
   const p0=S.enne?prior(false):null;
@@ -871,7 +1066,7 @@ function renderResult(){
     const m=arr.reduce((s,x)=>s+x.v,0)/arr.length;
     return Math.sqrt(arr.reduce((s,x)=>s+(x.v-m)**2,0)/(arr.length-1));
   });
-  const fin=AXES.map((a,i)=>qv[i]===null?p[i]:wp*p[i]+(1-wp)*qv[i]);
+  const fin=R0.fin;const fs=R0.fs;
   const letters=fin.map((v,i)=>v>50?AXES[i].r:v<50?AXES[i].l:(p[i]>=50?AXES[i].r:AXES[i].l));
   const type=letters.join("");
   const margins=fin.map(v=>Math.abs(v-50));
@@ -880,7 +1075,7 @@ function renderResult(){
   const c=counts();const top=c.length?c[0][0]:null;
 
   const pct=(v,i)=>{const r=v>=50;return `${r?AXES[i].r:AXES[i].l} ${Math.round(r?v:100-v)}%`;};
-  const strength=m=>m<5?["ほぼ五分","close"]:m<15?["やや",""]:["はっきり",""];
+  const strength=m=>m<5?["ほぼ五分","close"]:m<10?["やや",""]:["はっきり",""];
   // 判定は操作できない「ランプ」で表示：20マス（1マス5%）、真ん中から点灯
   const meter=(v,col)=>{
     // 少しでも寄っていれば1マスは点ける
@@ -906,12 +1101,39 @@ function renderResult(){
     </div>`;}).join("");
 
   // くわしい内訳（開いたときだけ読む）
+  // 質問・エニアグラム・心理機能で動いた部分はオレンジで強調する
+  const chg=t=>`<span class="chg">${t}</span>`;
   const detail=AXES.map((a,i)=>{
-    const en=p0&&Math.round(Math.abs(p[i]-p0[i]))>=1?`（うちエニアグラムで ${p[i]>p0[i]?a.r:a.l} +${Math.round(Math.abs(p[i]-p0[i]))}）`:"";
-    const sp=spread[i]===null?"":`<br>回ごとのブレ ±${Math.round(spread[i])}%`;
-    const moved=(p[i]-50)*(fin[i]-50)<0?`<br>質問で反対側に動きました`:"";
-    return `<li><b style="color:${TEXTC[letters[i]]}">${pct(fin[i],i)}</b>
-      <span>入力した結果 ${pct(p[i],i)}${en}<br>質問の答え ${qv[i]===null?"回答なし":pct(qv[i],i)}${sp}${moved}</span></li>`;
+    // 1つの軸を1〜2文で説明する。数字は入力と結果だけにして、途中は言葉で
+    const L=letters[i];const F=Math.round(L===a.r?fin[i]:100-fin[i]);
+    const IL=p[i]>=50?a.r:a.l;const IO=IL===a.r?a.l:a.r;            // 入力で寄っていた側
+    const sideI=v=>IL===a.r?v:100-v;const PI=Math.round(sideI(p[i]));
+    const lean=v=>v>=50?a.r:a.l;
+    const parts=[];
+    // 入力（エニアグラムで動いた分は向きだけ）
+    let inp=`入力では ${IL} ${PI}%`;
+    if(p0){const d=p[i]-p0[i];if(Math.round(Math.abs(d)))inp+=chg(`（エニアグラムで ${d>0?a.r:a.l} 寄りに少し）`);}
+    parts.push(inp);
+    // 行動の質問（入力で寄っていた側から見て）
+    if(qv[i]===null)parts.push("行動の質問にはまだ答えていません");
+    else{
+      const q=sideI(qv[i]);
+      parts.push(q<45?chg(`行動の質問では ${IO} 寄りの答えが多く`)
+        :q>PI+5?chg(`行動の質問でさらに ${IL} 寄りになり`)
+        :q<PI-5?chg(`行動の質問では ${IL} が少し弱まり`)
+        :"行動の質問でもほぼ同じで");
+    }
+    // 心理機能（どちらの文字のタイプが機能の並びとして合っていたか）
+    if(R0.fAxis){
+      const m=Math.abs(R0.fAxis[i]-50);const X=lean(R0.fAxis[i]);
+      parts.push(m>=10?chg(`心理機能では ${X} 側のタイプが合っていたので`)
+        :m>=3?chg(`心理機能で少し ${X} 側に寄り`)
+        :"心理機能ではどちらとも言えなかったので少し真ん中に寄り");
+    }
+    let txt=parts.join("、")+`、${L} ${F}% になりました。`;
+    if(L!==IL)txt+=chg("入力とは反対側になっています。");
+    if(spread[i]!==null)txt+=`<br>回ごとのブレは ±${Math.round(spread[i])}% です。`;
+    return `<li><b style="color:${TEXTC[L]}">${L} ${F}%</b><span>${txt}</span></li>`;
   }).join("");
   const hist=ss.map((z,k)=>{
     const t=AXES.map((a,i)=>{const x=sessAxis(z,i);const v=x?x.v:p[i];return v>50?a.r:v<50?a.l:(p[i]>=50?a.r:a.l);}).join("");
@@ -925,23 +1147,66 @@ function renderResult(){
   const ambDone=AXES.map((a,i)=>i).filter(i=>margins[i]<AMBIG&&!(last&&freeIn(last,i)));
   // 「調べ直す」：五分に近い軸があればその軸を追加で聞き、出し切っていたら別の質問で新しい回を始める
   const near=[...amb,...ambDone].sort((x,y)=>x-y).map(i=>AXES[i].l+"–"+AXES[i].r).join("、");
-  const redoHint=amb.length?`${near} が五分に近いので、そこを中心に聞きます。`
+  const redoHint0=amb.length?`${near} が五分に近いので、そこを中心に聞きます。`
     :ambDone.length?`${near} が五分に近いままです。別の質問で、もう1回聞きます。`
-    :"五分に近い軸はありません。別の質問でもう1回聞いて、ブレを確かめます。";
+    :"どの軸も60%を超えていて、ブレはありません。念のため、別の質問でもう1回聞くこともできます。";
+  let redoHint=redoHint0;
+  const sur=surprises(ss,fs);
+  const surHint=sur.length?`${sur.join("・")} が意外に強く出たので、${sur.join("・")} を持つタイプも候補に入れて確かめます。`:"";
+  if(surHint)redoHint=surHint+(amb.length?redoHint0:"");
   const line=top?(top===type?`これまで一番多かった ${top} と同じ`:`これまで一番多かったのは ${top}`):"";
+  // 心理機能：判定タイプの並びと、質問で強く出た機能
+  const st=STACK[type]||null;
+  const ranked=FNS.filter(F=>fs.cnt[F]>0).sort((a,b)=>fs.s(b)-fs.s(a));
+  let fnBlock="";
+  if(st){
+    let note="";
+    if(ranked.length){
+      const topF=ranked[0];
+      note=topF===st[0]?`質問でも ${fnHtml(topF)} がいちばん強く出ました。`
+        :`質問では ${fnHtml(topF)} がいちばん強く出ました（${type} の第1機能は ${fnHtml(st[0])}）。`;
+    }
+    // どの候補を、どの機能で比べたか（答え終わったあとなので表示してよい）
+    const lastS=ss[ss.length-1];
+    if(lastS&&lastS.cands&&lastS.cands.length>1){
+      const pr=fnPairs(lastS.cands).map(([a,b])=>`${fnHtml(a)}と${fnHtml(b)}`).join("、");
+      note+=`<br>迷っていた ${lastS.cands.join("・")} は、${pr} を比べて決めました。`;
+    }
+    if(sur.length){
+      const ts=TYPES.filter(t=>sur.some(F=>STACK[t][0]===F||STACK[t][1]===F)).slice(0,4).join("・");
+      note+=`<br>${chg(`候補の外の ${sur.map(fnHtml).join("・")} が意外に強く出ました（${ts} などの機能です）。`)}`;
+    }
+    // 01で入れた結果どうしで第1機能が食い違っていれば知らせる
+    const doms=[...new Set(S.rounds.map(v=>typeStr(v)).filter(t=>STACK[t]).map(t=>STACK[t][0]))];
+    const domNote=doms.length>1?`<p class="hint">これまでの結果では、第1機能が ${doms.map(fnHtml).join("・")} に分かれていました。</p>`:"";
+    fnBlock=`<div class="stack">
+      <p class="stack-h">機能の並び</p>
+      <div class="stack-row">${st.map((F,k)=>`<span class="st st${k}"><small>${["第1","第2","第3","第4"][k]}</small>${fnHtml(F)}</span>`).join('<span class="arr">▶</span>')}</div>
+      ${note?`<p class="hint">${note}</p>`:""}${domNote}
+    </div>`;
+  }
+  // くわしい内訳：8つの機能の強さ（10マス）
+  const fnList=FNS.map(F=>{
+    if(!fs.cnt[F])return `<li><span>${fnHtml(F)}</span><span class="hint">未測定</span></li>`;
+    const lit=Math.round((fs.s(F)+1)/2*10);let h="";
+    for(let k=0;k<10;k++)h+=`<i${k<lit?` style="background:${TEXTC[F[0]]}"`:""}></i>`;
+    return `<li><span>${fnHtml(F)}</span><span class="fmeter">${h}</span></li>`;
+  }).join("");
   document.getElementById("resultArea").innerHTML=`
     <div class="result">
       <div class="big"><span class="t" aria-label="${type}">${letters.map(L=>glyph(L,TEXTC[L],8)).join("")}</span>
         <span class="s">次の候補 <b>${alt.join("")}</b></span></div>
+      ${fnBlock}
       ${axesHtml}
       <details class="detail">
         <summary>くわしい内訳を見る</summary>
         <div class="detail-in">
           <ul class="dl">${detail}</ul>
+          ${fs.has?`<p class="hint">心理機能の強さ（質問で比べた結果）</p><ul class="fl">${fnList}</ul>`:""}
           <p class="hint">質問に答えた回：${n}回（${spLine}）</p>
           <div class="tally">${hist}</div>
           ${line?`<p class="hint">${line}</p>`:""}
-          <p class="note">最終判定は、入力した結果${Math.round(wp*100)}%・質問${Math.round((1-wp)*100)}%で計算しています。質問に答える回数が増えるほど、質問の比重が上がります。</p>
+          <p class="note">4つの軸は、入力した結果${Math.round(wp*100)}%・行動の質問${Math.round((1-wp)*100)}%で出し、${fs.has?"そこに心理機能の判定を4割まぜています。タイプが変われば第1機能も変わるので、機能の並びとして筋が通る側に寄せるためです。":"心理機能の質問にはまだ答えていません。"}質問に答える回数が増えるほど、質問の比重が上がります。</p>
           <div class="row"><button class="mini" id="againBtn">別の質問でもう1回答える</button></div>
           <div class="row"><button class="del danger" id="dropLast">最後の回を消す</button><button class="del danger" id="dropAll">回答の記録をすべて消す</button></div>
         </div>
@@ -949,10 +1214,57 @@ function renderResult(){
       <div class="redo">
         <button class="btn main" id="redoBtn">中間に近いタイプを調べ直す</button>
         <p class="hint">${redoHint}</p>
+        <button class="del" id="unsatBtn" aria-expanded="false">結果に納得できない・自分で選んで調べ直す</button>
+        <div class="unsat" id="unsatBox" hidden>
+          <div class="pick">
+            <p class="pick-h">軸を選んで聞き直す</p>
+            <p class="hint">気になる軸を選ぶと、その軸の行動の質問を4問ずつ追加します。</p>
+            <div class="axsel">${AXES.map((a,i)=>`<button class="mini" data-ax="${i}" aria-pressed="false">${a.l}–${a.r}</button>`).join("")}</div>
+            <button class="btn" id="axGo">選んだ軸を聞く</button>
+            <p class="hint err" id="axErr" hidden>軸を1つ以上選んでください。</p>
+          </div>
+          <div class="pick">
+            <p class="pick-h">機能を選んで比べる</p>
+            <p class="hint">比べたい2つの機能を選ぶと、どちらが強いかを聞く質問を4問追加します。</p>
+            <p class="hint">1つめ</p><div class="fsel" id="fselA">${FNS.map(F=>`<button class="mini fbtn" data-f="${F}" aria-pressed="false">${fnHtml(F)}</button>`).join("")}</div>
+            <p class="hint">2つめ</p><div class="fsel" id="fselB">${FNS.map(F=>`<button class="mini fbtn" data-f="${F}" aria-pressed="false">${fnHtml(F)}</button>`).join("")}</div>
+            <button class="btn" id="fnGo">この2つを比べる</button>
+            <p class="hint err" id="fnErr" hidden>違う機能を2つ選んでください。</p>
+          </div>
+          <div class="pick">
+            <p class="pick-h">自分だと思うタイプと比べる</p>
+            <p class="hint">選ぶと、${type} とそのタイプの違うところだけを、行動と心理機能の質問で比べ直します。</p>
+            <div class="types" id="unsatTypes">${TYPES.filter(t=>t!==type).map(t=>`<button class="tchip" data-t="${t}">${t}</button>`).join("")}</div>
+          </div>
+        </div>
       </div>
     </div>`;
+  const ub=document.getElementById("unsatBtn"),ubox=document.getElementById("unsatBox");
+  ub.onclick=()=>{ubox.hidden=!ubox.hidden;ub.setAttribute("aria-expanded",String(!ubox.hidden));};
+  ubox.querySelectorAll("button[data-t]").forEach(b=>b.onclick=()=>moreQuestions([],[type,b.dataset.t]));
+  // 軸を選ぶ
+  const axBtns=[...ubox.querySelectorAll("button[data-ax]")];
+  axBtns.forEach(b=>b.onclick=()=>{b.setAttribute("aria-pressed",b.getAttribute("aria-pressed")==="true"?"false":"true");document.getElementById("axErr").hidden=true;});
+  document.getElementById("axGo").onclick=()=>{
+    const sel=axBtns.filter(b=>b.getAttribute("aria-pressed")==="true").map(b=>+b.dataset.ax);
+    if(!sel.length){document.getElementById("axErr").hidden=false;return;}
+    customQuestions({axes:sel});
+  };
+  // 機能を2つ選ぶ（1つめ・2つめの列で、それぞれ1つだけ）
+  const fpick={A:null,B:null};
+  ["A","B"].forEach(k=>{
+    const row=document.getElementById("fsel"+k);
+    row.querySelectorAll("button").forEach(b=>b.onclick=()=>{
+      fpick[k]=b.dataset.f;row.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
+      document.getElementById("fnErr").hidden=true;
+    });
+  });
+  document.getElementById("fnGo").onclick=()=>{
+    if(!fpick.A||!fpick.B||fpick.A===fpick.B){document.getElementById("fnErr").hidden=false;return;}
+    customQuestions({pair:[fpick.A,fpick.B]});
+  };
   document.getElementById("redoBtn").onclick=()=>{
-    if(amb.length)moreQuestions(amb);
+    if(amb.length||sur.length)moreQuestions(amb);
     else{buildQuiz();document.getElementById("s3").scrollIntoView({block:"start"});}
   };
   document.getElementById("againBtn").onclick=()=>{buildQuiz();document.getElementById("s3").scrollIntoView({block:"start"});};
@@ -978,7 +1290,7 @@ function renderResult(){
     const w=Math.ceil(innerWidth/P),h=Math.ceil(innerHeight/P);
     if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h;
       stars=[];let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
-      for(let i=0;i<w*h/220;i++)stars.push([Math.floor(rnd()*w),Math.floor(rnd()*h*.8),rnd()]);
+      for(let i=0;i<w*h/220;i++)stars.push([Math.floor(rnd()*w),Math.floor(rnd()*h*.75),rnd()]);
       // 心理機能の文字を、夜空に薄く散らす（重ならないように置く）
       words=[];const want=Math.max(4,Math.round(w*h/2600));
       for(let t=0;t<want*20&&words.length<want;t++){
@@ -986,28 +1298,93 @@ function renderResult(){
         const edge=rnd();
         const x=edge<.17?-9+Math.floor(rnd()*6):edge<.34?w-8+Math.floor(rnd()*5):Math.floor(rnd()*(w-16));
         const y=8+Math.floor(rnd()*(h*.82-14));
-        if(words.every(q=>Math.abs(q[0]-x)>18||Math.abs(q[1]-y)>12))words.push([x,y,FN[words.length%8]]);
-      }}
-    const bands=["#10112a","#121430","#151837","#191c3f","#1d2147","#22264f"];
-    bands.forEach((c,i)=>{cx.fillStyle=c;cx.fillRect(0,Math.floor(h*i/bands.length),w,Math.ceil(h/bands.length)+1);});
+        if(words.every(q=>Math.abs(q[0]-x)>18||Math.abs(q[1]-y)>12))words.push([x,y,null]);
+      }
+      // 近くにある文字どうしは、違う機能にする（Ni の隣は Ni ではなく Fe のように）
+      // 同じ機能は置かない。文字が1つでもかぶる組（Ni と Ne、Ni と Si）もなるべく避ける
+      const near=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1])<46;
+      const used={};FN.forEach(f=>used[f]=0);
+      words.forEach(wd=>{
+        const nb=words.filter(o=>o!==wd&&o[2]&&near(o,wd)).map(o=>o[2]);
+        const score=f=>(nb.includes(f)?100:0)+nb.filter(g=>g[0]===f[0]||g[1]===f[1]).length*10+used[f]+rnd();
+        const f=FN.slice().sort((a,b)=>score(a)-score(b))[0];
+        wd[2]=f;used[f]++;
+      });}
+    // 動かない部分は一度だけ描いて取っておく（星のまたたきだけ毎回描き直す）
+    if(!cv._bg||cv._bg.width!==w||cv._bg.height!==h){
+      const bg=document.createElement("canvas");bg.width=w;bg.height=h;const g=bg.getContext("2d");
+      let seed=11;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+      // 空：上は深い紺、地平線に向かって紫。色の境目は4×4の網点（ディザ）でなめらかにつなぐ
+      const SKY=["#0b0c22","#0e0f28","#11132f","#151636","#19193d","#1e1c45","#241f4c","#2b2353","#33285a"];
+      const BAYER=[[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]];
+      for(let y=0;y<h;y++){
+        const t=Math.min(.999,y/(h*.92))*(SKY.length-1);const k=Math.floor(t),f=t-k;
+        for(let x=0;x<w;x++){
+          g.fillStyle=SKY[Math.min(SKY.length-1,k+(f*16>BAYER[y&3][x&3]?1:0))];g.fillRect(x,y,1,1);
+        }
+      }
+      // 天の川：斜めの帯に、薄い点を多めに散らす
+      for(let i=0;i<w*h/14;i++){
+        const x=rnd()*w,y=rnd()*h*.8;
+        const d=Math.abs((y-h*.1)-(x*.55))/(h*.22);           // 帯の中心からの距離
+        const n=Math.sin(x*.21)*Math.sin(y*.17)*.5+.5;
+        if(rnd()<Math.max(0,1-d)*(.35+.65*n)*.5){g.fillStyle=rnd()<.15?"#7277b5":rnd()<.5?"#4c5089":"#3a3d72";g.fillRect(Math.floor(x),Math.floor(y),1,1);}
+      }
+      // 小さな星
+      for(let i=0;i<w*h/180;i++){
+        const x=Math.floor(rnd()*w),y=Math.floor(rnd()*h*.82),r=rnd();
+        g.fillStyle=r>.8?"#8d93c8":r>.4?"#565c95":"#3b4072";g.fillRect(x,y,1,1);
+      }
+      // 三日月（右上）
+      const mx=Math.floor(w*.82),my=Math.floor(h*.11),R=Math.max(5,Math.round(Math.min(w,h)*.035));
+      for(let y=-R-2;y<=R+2;y++)for(let x=-R-2;x<=R+2;x++){
+        const d=Math.hypot(x,y),d2=Math.hypot(x-R*.55,y-R*.25);
+        if(d<=R+1.6&&d>R&&d2>R*.9){g.fillStyle="rgba(243,236,207,.18)";g.fillRect(mx+x,my+y,1,1);}
+        if(d<=R&&d2>R*.9){g.fillStyle=d>R-1.2?"#d9d0ae":"#f3eccf";g.fillRect(mx+x,my+y,1,1);}
+      }
+
+      // 山：遠い山（明るめ）と近い山（暗い）の2段。尾根のふちに1ドットの明るい線
+      const ridge=(base,amp,f1,f2,ph)=>x=>Math.floor(h*base+Math.sin(x*f1+ph)*amp+Math.sin(x*f2+ph*2)*amp*.6+Math.abs(Math.sin(x*f1*2.7))*amp*.35);
+      const far=ridge(.8,h*.035,.045,.017,1.3),nearR=ridge(.88,h*.025,.07,.023,.4);
+      for(let x=0;x<w;x++){
+        const y1=far(x);g.fillStyle="#1c1b40";g.fillRect(x,y1,1,h);g.fillStyle="#2e2c5e";g.fillRect(x,y1,1,1);
+      }
+      for(let x=0;x<w;x++){
+        const y2=nearR(x);g.fillStyle="#0b0c1c";g.fillRect(x,y2,1,h);g.fillStyle="#161733";g.fillRect(x,y2,1,1);
+      }
+      // ふもとの小さな明かり
+      for(let i=0;i<Math.max(3,w/40);i++){
+        const x=Math.floor(rnd()*w),y=nearR(x)+2+Math.floor(rnd()*Math.max(2,h*.06));
+        g.fillStyle=rnd()<.5?"#ffd36b":"#ef7d57";g.fillRect(x,y,1,1);
+      }
+      cv._bg=bg;
+      drawWords(w,h);
+    }
+    cx.drawImage(cv._bg,0,0);
+    // 明るい星：十字に光る。ときどき消えてまたたく
     stars.forEach(([x,y,r])=>{
-      const on=tw?Math.random()>.08:true;
-      cx.fillStyle=r>.95?"#b7bde3":r>.75?"#5d6496":"#363b66";if(on)cx.fillRect(x,y,1,1);
+      if(r<.9)return;
+      if(tw&&Math.random()<.12)return;
+      cx.fillStyle="#eef0ff";cx.fillRect(x,y,1,1);
+      if(r>.97){cx.fillStyle="rgba(238,240,255,.45)";cx.fillRect(x-1,y,1,1);cx.fillRect(x+1,y,1,1);cx.fillRect(x,y-1,1,1);cx.fillRect(x,y+1,1,1);}
     });
-    cx.globalAlpha=.32;
-    // 文字は右上がり30度に傾けて描く
-    words.forEach(([x,y,f])=>{
-      cx.save();cx.translate(x,y);cx.rotate(-Math.PI/6);
-      [...f].forEach((ch,k)=>{
-        const g=GLYPH[ch]||LOW[ch];cx.fillStyle=COL[ch];
-        g.forEach((row,yy)=>[...row].forEach((b,xx)=>{if(b==="1")cx.fillRect(k*6+xx,yy,1,1);}));
-      });
-      cx.restore();
+  }
+  // 心理機能の文字は、空より2倍細かいキャンバスに描く。
+  // ドットを1つずつ回して置くので、30度傾けてもにじまず、形もくずれにくい
+  const tv=document.getElementById("skytext");const tx=tv.getContext("2d");
+  function drawWords(w,h){
+    const Q=2;tv.width=w*Q;tv.height=h*Q;tx.clearRect(0,0,tv.width,tv.height);
+    const ca=Math.cos(Math.PI/6),sa=Math.sin(Math.PI/6);
+    tx.globalAlpha=.42;
+    words.forEach(([x0,y0,f])=>{
+      const lit=(u,v)=>{const k=Math.floor(u/6),xx=u-k*6;if(k<0||k>1||xx>4||v<0||v>6)return null;
+        const ch=f[k];const gl=GLYPH[ch]||LOW[ch];return gl[v][xx]==="1"?ch:null;};
+      for(let dy=-16;dy<=20;dy++)for(let dx=-4;dx<=28;dx++){
+        const X=(dx+.5)/Q,Y=(dy+.5)/Q;                         // 画素の中心で、空のドット単位に戻す
+        const u=Math.floor(X*ca-Y*sa),v=Math.floor(X*sa+Y*ca); // 右上がり30度の逆回し
+        const ch=lit(u,v);if(ch){tx.fillStyle=COL[ch];tx.fillRect(x0*Q+dx,y0*Q+dy,1,1);}
+      }
     });
-    cx.globalAlpha=1;
-    // 地平線の山（ドットの影）
-    cx.fillStyle="#0b0c1c";let y=Math.floor(h*.9);
-    for(let x=0;x<w;x++){const t=Math.sin(x*.07)*3+Math.sin(x*.023)*6;cx.fillRect(x,Math.floor(h*.88+t),1,h);}
   }
   draw(false);addEventListener("resize",()=>draw(false));
   if(!matchMedia("(prefers-reduced-motion: reduce)").matches)setInterval(()=>draw(true),900);
